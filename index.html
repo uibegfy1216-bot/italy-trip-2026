@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>意大利旅行规划 · 2026.9.23–10.7</title>
+<style>
+  :root{
+    --bg:#f6f5f2; --card:#ffffff; --ink:#232323; --sub:#8a8a86; --line:#e8e6e1;
+    --venice:#3a7ca5; --dolo:#4a8f6c; --flor:#c06b4a; --rome:#b8912f; --alert:#c0492f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.65;padding-bottom:60px}
+  .wrap{max-width:640px;margin:0 auto;padding:0 14px}
+  header{padding:28px 0 6px}
+  h1{font-size:24px;font-weight:700;letter-spacing:.5px}
+  .meta{color:var(--sub);font-size:13px;margin-top:6px}
+  .ver{display:inline-block;background:#eee9e2;color:#8a8578;font-size:11px;
+       padding:2px 8px;border-radius:10px;margin-top:8px}
+  /* tabs */
+  .tabs{position:sticky;top:0;z-index:20;background:var(--bg);padding:12px 0 10px;
+        display:flex;gap:8px}
+  .tab{flex:1;text-align:center;padding:10px 0;background:#eceae5;border-radius:12px;
+       font-size:14px;color:#6b6b66;cursor:pointer;user-select:none;transition:.15s}
+  .tab.on{background:var(--ink);color:#fff;font-weight:600}
+  .pane{display:none}.pane.on{display:block}
+  /* alert */
+  .alert{background:#fdf3f1;border:1px solid #f0d5cf;border-radius:14px;
+         padding:12px 14px;margin:10px 0;font-size:13.5px}
+  .alert b{color:var(--alert)}
+  .alert .t{font-weight:700;color:var(--alert);margin-bottom:4px;font-size:14px}
+  /* day cards */
+  .day{background:var(--card);border-radius:16px;padding:14px 16px;margin:10px 0;
+       box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .day .dt{display:flex;align-items:baseline;gap:8px}
+  .day .d{font-size:17px;font-weight:700}
+  .day .w{font-size:12px;color:var(--sub)}
+  .badge{font-size:11px;color:#fff;padding:2px 9px;border-radius:10px;margin-left:auto}
+  .day .plan{font-size:14px;margin-top:8px}
+  .day .stay{font-size:12.5px;color:var(--sub);margin-top:8px;
+             border-top:1px dashed var(--line);padding-top:8px}
+  .day .stay::before{content:"🛏 "; }
+  .tag{font-size:11px;background:#f2efe9;color:#7a756a;padding:1px 7px;border-radius:8px;margin-right:4px}
+  .strike{background:#fdf8ec;border-color:#ecdfc0}
+  /* checklist */
+  .item{background:var(--card);border-radius:12px;padding:12px 14px;margin:8px 0;
+        display:flex;gap:10px;align-items:flex-start;font-size:14px}
+  .item input{margin-top:4px;width:18px;height:18px;accent-color:var(--ink);flex:none}
+  .item .note{font-size:12px;color:var(--sub);margin-top:2px}
+  .item.done label{color:var(--sub);text-decoration:line-through}
+  h3.sec{font-size:15px;margin:20px 0 8px;padding-left:2px}
+  h3.sec::before{content:"";display:inline-block;width:4px;height:14px;background:var(--ink);
+        border-radius:2px;margin-right:8px;vertical-align:-2px}
+  /* budget table */
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;
+        overflow:hidden;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  th{background:#333;color:#fff;font-weight:600}
+  tr:last-child td{border-bottom:none;font-weight:700}
+  .tip{font-size:12px;color:var(--sub);margin-top:10px}
+  footer{text-align:center;color:var(--sub);font-size:11px;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🇮🇹 意大利旅行规划</h1>
+    <div class="meta">两人 · 不自驾 · 2026/9/23 出发 – 10/7 回 · 威尼斯→多洛米蒂→佛罗伦萨→罗马</div>
+    <span class="ver">v1.4 · 更新于 2026-07-18</span>
+  </header>
+
+  <div class="tabs">
+    <div class="tab on" data-t="trip">🗓 行程</div>
+    <div class="tab" data-t="visa">🛂 签证</div>
+    <div class="tab" data-t="money">💰 预算</div>
+  </div>
+
+  <!-- ============ 行程 ============ -->
+  <div class="pane on" id="trip">
+    <div class="alert">
+      <div class="t">🔥 本周三件事</div>
+      ① 每天刷 <b>VFS 签证预约</b>（visa.vfsglobal.com/chn/zh/ita，目标 8 月上中旬的号）<br>
+      ② 买<b>申根医疗险</b>（≥€3万，9/23–10/8）＋每天刷 <b>tosca.it 博尔盖塞</b>（见 10/4 票即买）<br>
+      ③ 锁定返程机票 <b>CA940</b>（10/6 罗马 20:30 直飞，国庆涨价前）
+    </div>
+    <div class="alert strike" style="background:#fdf8ec;border:1px solid #ecdfc0">
+      <div class="t" style="color:#9a7b1e">⚠️ 罢工提醒</div>
+      <b>9/25–26 全国总罢工已确认</b>。对策：9/25 上午越早进山越好；9/26 在山区原地活动。9 月起每周查 scioperi.mit.gov.it。
+    </div>
+
+    <div id="days"></div>
+    <div class="tip">💡 每天卡片的「住」是街区级落位；逐段交通和预订时间线见完整版 md（意大利旅行规划_v1.md）。</div>
+  </div>
+
+  <!-- ============ 签证 ============ -->
+  <div class="pane" id="visa">
+    <div class="alert">
+      <div class="t">⏰ 瓶颈是预约号，不是审理</div>
+      北京近期 4–8 个工作日出签，但暑期热门国预约排到 ~3 个月后。<b>今天就刷号</b>；刷不到北京的，可换西安/武汉/济南/沈阳（同属北京领区）。递交红线：9/8 前。
+    </div>
+
+    <h3 class="sec">材料 checklist（可勾选，自动保存）</h3>
+    <div id="checklist"></div>
+
+    <h3 class="sec">时间表</h3>
+    <div id="timeline"></div>
+
+    <h3 class="sec">费用（两人）</h3>
+    <table>
+      <tr><th>项目</th><th>金额</th></tr>
+      <tr><td>签证费 €90×2</td><td>≈¥1,488</td></tr>
+      <tr><td>VFS 服务费 ×2</td><td>¥156</td></tr>
+      <tr><td>保险 ×2</td><td>¥200–600</td></tr>
+      <tr><td>快递返签 ×2</td><td>≈¥100</td></tr>
+      <tr><td>合计</td><td>≈¥2,100–2,400</td></tr>
+    </table>
+    <div class="tip">⚠️ 高频拒签点：流水临时大额存入（现在起禁止）｜酒店订单缺一人姓名｜保险日期没盖住全程｜行程单与订单不一致。</div>
+  </div>
+
+  <!-- ============ 预算 ============ -->
+  <div class="pane" id="money">
+    <table>
+      <tr><th>项目</th><th>最小档</th><th>最大档</th></tr>
+      <tr><td>住宿 12 晚</td><td>¥17,200</td><td>¥29,760</td></tr>
+      <tr><td>餐饮 13 天</td><td>¥13,520</td><td>¥17,680</td></tr>
+      <tr><td>城际+市内交通</td><td>¥5,000</td><td>¥7,000</td></tr>
+      <tr><td>门票+活动</td><td>¥4,400</td><td>¥6,000</td></tr>
+      <tr><td>城市税</td><td>¥960</td><td>¥1,200</td></tr>
+      <tr><td>签证+机票+保险杂项</td><td>¥11,200</td><td>¥17,000</td></tr>
+      <tr><td>合计（人均）</td><td>¥52,280<br>(¥26,140)</td><td>¥78,640<br>(¥39,320)</td></tr>
+    </table>
+    <div class="tip">💡 不含去程机票与购物。可调参数版见 意大利旅行预算表.xlsx（每订一项，把真实金额填进「实际花费」列）。</div>
+
+    <h3 class="sec">预订时间线</h3>
+    <div class="item"><div><b>7 月底前</b>：订全程 13 晚可取消酒店（两人姓名都要在订单上！Ortisei 5 晚最先订）</div></div>
+    <div class="item"><div><b>8/6</b>：梵蒂冈 10/5 门票（罗马时间 0:00 放票）</div></div>
+    <div class="item"><div><b>8 月中</b>：圣母百花穹顶 10/1 场（实名，热门时段提前 2–4 周售罄）</div></div>
+    <div class="item"><div><b>9/5 前后</b>：斗兽场 10/5 门票（提前 30 天）；定奥尔恰谷一日团</div></div>
+    <div class="item"><div><b>9/20 前</b>：订 9/25 晚 Verona/Bolzano backup 房（可取消，罢工兜底）</div></div>
+    <div class="item"><div><b>放票即买</b>：Seceda 分时段票、Gardena Card、火车票（可退改）</div></div>
+  </div>
+
+  <footer>意大利旅行规划 v1.4 · 2026-07-18 · 有问题随时改 🍝</footer>
+</div>
+
+<script>
+/* ---------- 行程数据 ---------- */
+const SEG = { "威尼斯":"var(--venice)", "Ortisei":"var(--dolo)", "佛罗伦萨":"var(--flor)", "罗马":"var(--rome)", "机上":"#999" };
+const DAYS = [
+ ["9/23","三","机上","北京 21:00 起飞","机上"],
+ ["9/24","四","威尼斯","维也纳清晨快闪（圣斯蒂芬+咖啡馆早餐）→ 13:00 落地威尼斯，大巴进岛；下午+夜晚主岛（圣马可/Dorsoduro/Zattere 日落）","Dorsoduro 区·近罗马广场/火车站"],
+ ["9/25","五","Ortisei","⚠️罢工日：清晨威尼斯扫街 → 上午 9–10 点火车（优先 EC 国际车次）→ Bolzano → 350 路进山","主街 Piazza S Antonio 500m 圈"],
+ ["9/26","六","Ortisei","Seceda 刀锋山（罢工第 2 天原地活动；分时段票放票即买）","Ortisei"],
+ ["9/27","日","Ortisei","休斯高原草甸轻徒步（Monte Piz 7.7km 或 Puflatsch 8.8km）","Ortisei"],
+ ["9/28","一","Ortisei","🚴 骑行日：男朋友谷地旧铁道铺装道/guided tour；你 Resciesa/spa/二刷休斯","Ortisei"],
+ ["9/29","二","Ortisei","机动日：富内斯 > Sassolungo > Bolzano 雨天案 > 摆烂","Ortisei"],
+ ["9/30","三","佛罗伦萨","早出山（A 案 7:12 直达 10:24 / B 案 8 点走 ~13:00）→ 下午 Oltrarno+老桥 → 米开朗基罗广场日落","SMN 车站步行 10–15 分钟·历史中心西侧"],
+ ["10/1","四","佛罗伦萨","圣母百花穹顶 8:15 场 → 大教堂博物馆 → 旧宫塔楼/巴杰罗 → 领主广场夜游","佛罗伦萨"],
+ ["10/2","五","佛罗伦萨","奥尔恰谷一日小团：皮恩扎+柏树曲线+Montalcino 酒庄品酒","佛罗伦萨"],
+ ["10/3","六","罗马","高铁南下 → Monti 扫街+斗兽场外观机位 → 圣天使桥日落","万神殿–纳沃纳–鲜花广场三角区"],
+ ["10/4","日","罗马","圣彼得 7:00 早场+穹顶 → 午休 → 博尔盖塞 15:00 → 苹丘日落","罗马"],
+ ["10/5","一","罗马","梵蒂冈博物馆 8:30 → 斗兽场+帕拉蒂尼+古罗马广场 14:30 → Trastevere 晚餐","罗马"],
+ ["10/6","二","机上","清晨扫街（西班牙广场→特雷维→万神殿→纳沃纳）→ 16:15 出发 FCO → CA940 20:30","机上"],
+ ["10/7","三","机上","12:45 落地北京 ✓","—"],
+];
+document.getElementById("days").innerHTML = DAYS.map(d=>{
+  const strike = d[1]==="五"&&d[0]==="9/25" ? " strike" : "";
+  const badge = d[2]==="机上" ? "" : `<span class="badge" style="background:${SEG[d[2]]}">${d[2]}</span>`;
+  return `<div class="day${strike}">
+    <div class="dt"><span class="d">${d[0]}</span><span class="w">周${d[1]}</span>${badge}</div>
+    <div class="plan">${d[3]}</div>
+    <div class="stay">${d[4]}</div>
+  </div>`;
+}).join("");
+
+/* ---------- 签证 checklist ---------- */
+const CHECKS = [
+ ["刷 VFS 预约（两人各注册）","目标 8 月上中旬；早 8 点/晚 10 点后多刷，捡取消号"],
+ ["查护照","有效期 ≥2027-01-07 + 2 页空白；不够就本周换发"],
+ ["在职证明 ×2","写 9/23–10/8 准假、保留职位、签字+公章；附营业执照盖章"],
+ ["银行流水（近 3 个月）","余额 ≥3–5 万/人；绝不大额突存；递交前 15 天内打印"],
+ ["订全程 13 晚可取消酒店","两人姓名都要在订单上（高频翻车点）"],
+ ["买申根医疗险 ×2","≥€3万、含遣返、9/23–10/8、英文保单（¥100–300/人）"],
+ ["返程机票预订单","签证用预订单即可，不必出票（或买可退改）"],
+ ["申根申请表 ×2","在线填写打印，手写汉字签名"],
+ ["照片 ×2 人","3.5×4.0cm 白底近照各 2 张"],
+ ["身份证/户口本复印","身份证正反面同页；户口本整本"],
+ ["PIPL 同意书","2026 新规，现场签或随材料交"],
+ ["英文行程单","精确到每日城市+酒店+交通（可由规划 v1.4 生成）"],
+ ["加分项（可选）","完税证明（带二维码）/社保/结婚证/房产/旧申根记录"],
+];
+const saved = JSON.parse(localStorage.getItem("visaChecks")||"{}");
+document.getElementById("checklist").innerHTML = CHECKS.map((c,i)=>`
+  <div class="item ${saved[i]?"done":""}">
+    <input type="checkbox" id="ck${i}" ${saved[i]?"checked":""}>
+    <div><label for="ck${i}"><b>${c[0]}</b></label><div class="note">${c[1]}</div></div>
+  </div>`).join("");
+CHECKS.forEach((_,i)=>{
+  document.getElementById("ck"+i).addEventListener("change",e=>{
+    saved[i]=e.target.checked; localStorage.setItem("visaChecks",JSON.stringify(saved));
+    e.target.closest(".item").classList.toggle("done",e.target.checked);
+  });
+});
+
+/* ---------- 签证时间表 ---------- */
+const TL = [
+ ["第 1 周 7/18–24","刷预约号；查护照；开在职证明；流水养号（绝不大额突存）"],
+ ["第 2–3 周 7/25–8/7","订全程可取消酒店；买保险；填申请表；拍照；机票预订单"],
+ ["第 4 周 8/8–15","本人递交+录指纹+缴费；选快递返签"],
+ ["第 5–6 周 8/16–9/5","等出签（4–8 工作日）；补料 48–72h 内响应；出签后出正式机票"],
+ ["9/6–23","保底缓冲（不作为计划一部分）"],
+];
+document.getElementById("timeline").innerHTML = TL.map(t=>
+  `<div class="item"><div><b>${t[0]}</b><div class="note">${t[1]}</div></div></div>`).join("");
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(t=>{
+  t.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+    document.querySelectorAll(".pane").forEach(x=>x.classList.remove("on"));
+    t.classList.add("on");
+    document.getElementById(t.dataset.t).classList.add("on");
+    window.scrollTo({top:0});
+  });
+});
+</script>
+</body>
+</html>
