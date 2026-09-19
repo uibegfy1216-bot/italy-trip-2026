@@ -3,34 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>意大利小时级旅行计划 · 2026.9.23–10.8</title>
+<title>意大利旅行工作台 · 2026.9.23–10.8</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
   :root{
-    --bg:#f6f5f2; --card:#ffffff; --ink:#232323; --sub:#8a8a86; --line:#e8e6e1;
-    --venice:#3a7ca5; --dolo:#4a8f6c; --flor:#c06b4a; --rome:#b8912f; --bru:#6a5acd; --alert:#c0492f;
+    --bg:#f7f2ea; --card:#ffffff; --ink:#2b2620; --sub:#8a8378; --line:#e5ddd0;
+    --accent:#b06a3b; --green:#3d5245; --alert:#c0492f;
+    --venice:#4a7a96; --dolo:#4a8f6c; --flor:#b06a3b; --rome:#b8912f; --bru:#6a5a8f;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
   body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
-       background:var(--bg);color:var(--ink);line-height:1.65;padding-bottom:60px}
+       background:var(--bg);color:var(--ink);line-height:1.65;
+       padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  .serif{font-family:"Songti SC","STSong",serif;font-weight:700}
+  .num{font-variant-numeric:tabular-nums}
   .wrap{max-width:640px;margin:0 auto;padding:0 14px}
-  header{padding:28px 0 6px}
-  h1{font-size:23px;font-weight:700;letter-spacing:.5px}
-  .meta{color:var(--sub);font-size:13px;margin-top:6px}
-  .ver{display:inline-block;background:#eee9e2;color:#8a8578;font-size:11px;
-       padding:2px 8px;border-radius:10px;margin-top:8px}
-  .tabs{position:sticky;top:0;z-index:20;background:var(--bg);padding:12px 0 10px;display:flex;gap:8px}
-  .tab{flex:1;text-align:center;padding:10px 0;background:#eceae5;border-radius:12px;
-       font-size:14px;color:#6b6b66;cursor:pointer;user-select:none;transition:.15s}
-  .tab.on{background:var(--ink);color:#fff;font-weight:600}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;background:linear-gradient(160deg,#3d5245 0%,#2f4237 100%);
+        color:#f7f2ea;padding:34px 20px 66px;overflow:hidden;border-radius:0 0 26px 26px}
+  .hero .hills{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:64px;opacity:.35}
+  .hero h1{font-family:"Songti SC","STSong",serif;font-weight:700;font-size:34px;letter-spacing:2px}
+  .hero .latin{font-size:13px;letter-spacing:3px;opacity:.75;margin-top:4px}
+  .hero .range{font-size:14px;margin-top:12px;opacity:.92;font-variant-numeric:tabular-nums}
+  .hero .caps{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .cap{background:rgba(247,242,234,.14);border:1px solid rgba(247,242,234,.28);
+       border-radius:20px;padding:5px 12px;font-size:12.5px;backdrop-filter:blur(2px)}
+  .cap b{font-variant-numeric:tabular-nums}
+
+  /* ---------- 底部 Tab ---------- */
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fffdf8;
+          border-top:1px solid var(--line);display:flex;
+          padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .tabbar .tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+              padding:5px 0;border-radius:12px;cursor:pointer;color:var(--sub);font-size:11px}
+  .tabbar .tb svg{width:22px;height:22px;stroke:var(--sub);fill:none;stroke-width:1.6;
+                  stroke-linecap:round;stroke-linejoin:round}
+  .tabbar .tb.on{color:var(--green);font-weight:600}
+  .tabbar .tb.on svg{stroke:var(--green)}
+  .tabbar .tb.on svg .fillable{fill:var(--green)}
+
   .pane{display:none}.pane.on{display:block}
-  .alert{background:#fdf3f1;border:1px solid #f0d5cf;border-radius:14px;
-         padding:12px 14px;margin:10px 0;font-size:13.5px}
-  .alert b{color:var(--alert)}
-  .alert .t{font-weight:700;color:var(--alert);margin-bottom:4px;font-size:14px}
-  .day{background:var(--card);border-radius:16px;padding:14px 16px;margin:10px 0;
-       box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer}
+  h3.sec{font-size:15px;margin:22px 0 10px;padding-left:2px;font-family:"Songti SC","STSong",serif;font-weight:700}
+  h3.sec::before{content:"";display:inline-block;width:4px;height:14px;background:var(--accent);
+        border-radius:2px;margin-right:8px;vertical-align:-2px}
+
+  /* ---------- 预警横幅 ---------- */
+  .alert{border-radius:16px;padding:13px 15px;margin:12px 0;font-size:13.5px;
+         background:#fdf6ef;border:1px solid #eeddc8;box-shadow:0 1px 4px rgba(176,106,59,.08)}
+  .alert .t{font-weight:700;margin-bottom:4px;font-size:14px}
+  .alert.red{background:#fdf3f1;border-color:#f0d5cf}
+  .alert.red .t{color:var(--alert)}
+  .alert.red b{color:var(--alert)}
+  .alert.blue{background:#f0f4fa;border-color:#d5e0ee}
+  .alert.blue .t{color:#33517a}
+
+  /* ---------- 日期胶囊条 ---------- */
+  .datestrip{display:flex;gap:8px;overflow-x:auto;padding:12px 2px 10px;
+             position:sticky;top:0;z-index:30;background:var(--bg);
+             scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .datestrip::-webkit-scrollbar{display:none}
+  .pill{flex:none;min-width:52px;text-align:center;padding:7px 10px;background:var(--card);
+        border:1px solid var(--line);border-radius:14px;font-size:12px;cursor:pointer;line-height:1.35}
+  .pill .pd{font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+  .pill .pw{color:var(--sub);font-size:11px}
+  .pill .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-top:3px}
+  .pill.on{border-color:var(--green);background:#eef3ef;box-shadow:0 1px 3px rgba(61,82,69,.15)}
+
+  /* ---------- 每日卡片 ---------- */
+  .day{background:var(--card);border:1px solid var(--line);border-radius:16px;
+       padding:14px 16px;margin:12px 0;box-shadow:0 2px 6px rgba(43,38,32,.06);cursor:pointer;scroll-margin-top:74px}
   .day .dt{display:flex;align-items:baseline;gap:8px}
-  .day .d{font-size:17px;font-weight:700}
+  .day .d{font-size:18px;font-weight:700;font-family:"Songti SC","STSong",serif}
   .day .w{font-size:12px;color:var(--sub)}
   .badge{font-size:11px;color:#fff;padding:2px 9px;border-radius:10px;margin-left:auto}
   .chev{color:#c8c4bb;font-size:14px;transition:transform .2s;flex:none}
@@ -40,100 +85,337 @@
              border-top:1px dashed var(--line);padding-top:8px}
   .day .stay::before{content:"🛏 ";}
   .strike{background:#fdf8ec}
-  .detail{display:none;margin-top:10px;border-top:1px solid var(--line);padding-top:6px}
+  .detail{display:none;margin-top:12px;border-top:1px solid var(--line);padding-top:10px;cursor:default}
   .day.open .detail{display:block}
-  .detail table{font-size:12.5px;margin:6px 0;box-shadow:none;border:1px solid var(--line)}
-  .detail th{background:#f2efe9;color:#555;font-weight:600}
-  .detail td{text-align:left;vertical-align:top}
-  .detail th:first-child{width:86px;white-space:nowrap}
-  .detail .keynote{background:#fbf7ee;border-radius:10px;padding:9px 12px;font-size:12.5px;margin:8px 0}
-  .detail .keynote b{color:#9a7b1e}
-  .warn{color:var(--alert);font-weight:600}
-  .fx{font-weight:700}
-  .item{background:var(--card);border-radius:12px;padding:12px 14px;margin:8px 0;
+
+  /* 当日地图卡 */
+  .mapcard{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:4px 0 12px;background:#fbf8f2}
+  .mapcard .maptitle{display:flex;align-items:center;justify-content:space-between;
+        padding:9px 12px;font-size:13px;font-weight:600}
+  .mapcard .mapbtns{display:flex;gap:6px}
+  .mbtn{font-size:11.5px;border:1px solid var(--line);background:#fff;border-radius:16px;
+        padding:4px 10px;color:var(--green);cursor:pointer;text-decoration:none;white-space:nowrap}
+  .mapbox{height:210px;width:100%}
+  .nmarker{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;
+        font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;
+        border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+  .me-marker{width:16px;height:16px;border-radius:50%;background:#2b7de9;
+        border:3px solid #fff;box-shadow:0 0 0 4px rgba(43,125,233,.25)}
+
+  /* 时间轴 */
+  .tl{position:relative;margin:8px 0 4px;padding-left:0}
+  .tlrow{display:flex;gap:12px;position:relative;padding:7px 0 7px 0}
+  .tlrow::before{content:"";position:absolute;left:84px;top:0;bottom:0;width:1.5px;background:var(--line)}
+  .tlrow:first-child::before{top:16px}
+  .tlrow:last-child::before{bottom:auto;height:16px}
+  .tlrow .tt{flex:none;width:76px;text-align:right;font-size:12px;color:var(--sub);
+             font-variant-numeric:tabular-nums;line-height:1.5;padding-top:1px}
+  .tlrow .tdot{flex:none;width:9px;height:9px;border-radius:50%;background:var(--accent);
+               margin:6px 0 0 -0.5px;position:relative;left:0;z-index:1;box-shadow:0 0 0 3px var(--card)}
+  .tlrow .tc{flex:1;font-size:13.5px;line-height:1.6;padding-left:4px}
+  .spot-chip{color:var(--accent);text-decoration:underline dotted var(--accent);
+             text-underline-offset:3px;cursor:pointer;font-weight:600}
+  .keynote{background:#fbf5e8;border:1px solid #efe2c4;border-radius:12px;
+           padding:10px 12px;font-size:12.5px;margin:10px 0 2px}
+  .keynote b{color:#9a7b1e}
+
+  /* 折叠分区 */
+  details.fold{background:var(--card);border:1px solid var(--line);border-radius:16px;
+               margin:12px 0;box-shadow:0 2px 6px rgba(43,38,32,.05);overflow:hidden}
+  details.fold>summary{cursor:pointer;list-style:none;padding:14px 16px;font-size:15px;
+        font-weight:700;font-family:"Songti SC","STSong",serif;display:flex;align-items:center}
+  details.fold>summary::-webkit-details-marker{display:none}
+  details.fold>summary::after{content:"›";margin-left:auto;color:#c8c4bb;transition:transform .2s;font-size:16px}
+  details.fold[open]>summary::after{transform:rotate(90deg)}
+  details.fold .fbody{padding:2px 16px 16px}
+
+  /* 核对清单 */
+  .item{background:#fbf8f2;border-radius:12px;padding:12px 14px;margin:8px 0;
         display:flex;gap:10px;align-items:flex-start;font-size:14px}
-  .item input{margin-top:4px;width:18px;height:18px;accent-color:var(--ink);flex:none}
+  .item input{margin-top:4px;width:18px;height:18px;accent-color:var(--green);flex:none}
   .item .note{font-size:12px;color:var(--sub);margin-top:2px}
   .item.done label{color:var(--sub);text-decoration:line-through}
-  h3.sec{font-size:15px;margin:20px 0 8px;padding-left:2px}
-  h3.sec::before{content:"";display:inline-block;width:4px;height:14px;background:var(--ink);
-        border-radius:2px;margin-right:8px;vertical-align:-2px}
+
   table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;
-        overflow:hidden;font-size:12.5px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-  th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line)}
-  th{background:#333;color:#fff;font-weight:600}
+        overflow:hidden;font-size:12.5px}
+  th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--green);color:#fff;font-weight:600}
   tr:last-child td{border-bottom:none}
   .tip{font-size:12px;color:var(--sub);margin-top:10px}
-  footer{text-align:center;color:var(--sub);font-size:11px;margin-top:30px}
+  .warn{color:var(--alert);font-weight:600}
+  footer{text-align:center;color:var(--sub);font-size:11px;margin-top:30px;line-height:1.9}
+
+  /* ---------- Bottom Sheet ---------- */
+  .sheetmask{position:fixed;inset:0;background:rgba(43,38,32,.4);z-index:80;opacity:0;
+             pointer-events:none;transition:opacity .25s}
+  .sheetmask.on{opacity:1;pointer-events:auto}
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:90;background:#fffdf8;
+         border-radius:20px 20px 0 0;max-width:640px;margin:0 auto;
+         transform:translateY(100%);transition:transform .28s ease;
+         padding:10px 20px calc(24px + env(safe-area-inset-bottom));max-height:72vh;overflow-y:auto}
+  .sheet.on{transform:translateY(0)}
+  .sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 14px}
+  .sheet h4{font-family:"Songti SC","STSong",serif;font-size:19px;font-weight:700}
+  .sheet .intro{color:var(--accent);font-size:13.5px;margin-top:6px;font-weight:600}
+  .sheet .detail2{font-size:14px;margin-top:10px;color:var(--ink)}
+  .sheet .tipbox{background:#fbf5e8;border:1px solid #efe2c4;border-radius:12px;
+                 padding:9px 12px;font-size:12.5px;margin-top:12px}
+  .sheet .tipbox b{color:#9a7b1e}
+  .gmapbtn{display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:var(--green);
+           color:#fff;text-decoration:none;border-radius:14px;padding:10px 18px;font-size:14px;font-weight:600}
+
+  /* ---------- 天气 Tab ---------- */
+  .wcard{background:var(--card);border:1px solid var(--line);border-radius:16px;
+         padding:14px 16px;margin:12px 0;box-shadow:0 2px 6px rgba(43,38,32,.05)}
+  .wcard .wh{display:flex;align-items:baseline;gap:8px}
+  .wcard .wd{font-weight:700;font-size:15px;font-family:"Songti SC","STSong",serif}
+  .wcard .wc{font-size:12px;color:var(--sub)}
+  .wcard .wicon{margin-left:auto;font-size:24px}
+  .wgrid{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:13px;margin-top:8px;font-variant-numeric:tabular-nums}
+  .wgrid span b{color:var(--ink)}
+  .wadv{background:#f4f1ea;border-radius:10px;padding:9px 12px;font-size:12.5px;margin-top:10px}
+  .wadv b{color:var(--green)}
+  .ownoutfit{width:100%;border:1px dashed var(--line);border-radius:10px;background:#fbf8f2;
+             font-family:inherit;font-size:13px;padding:9px 11px;margin-top:10px;resize:vertical;min-height:44px;color:var(--ink)}
+  .wrefresh{display:flex;align-items:center;gap:8px;margin:14px 0 2px;font-size:12px;color:var(--sub)}
+  .wrefresh button{margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:16px;
+        padding:5px 14px;font-size:12.5px;color:var(--green);cursor:pointer}
+  .wfail{background:#fdf3f1;border:1px solid #f0d5cf;border-radius:12px;padding:12px 14px;font-size:13px;margin:12px 0}
+
+  /* ---------- 探店 Tab ---------- */
+  .shopcard{background:var(--card);border:1px solid var(--line);border-radius:16px;
+            padding:13px 15px;margin:10px 0;box-shadow:0 2px 6px rgba(43,38,32,.05)}
+  .shopcard .sh{display:flex;align-items:center;gap:8px}
+  .shopcard .sn{font-weight:700;font-size:14.5px}
+  .typetag{font-size:11px;padding:2px 9px;border-radius:10px;background:#eef3ef;color:var(--green);font-weight:600}
+  .shopcard .sc{font-size:12px;color:var(--sub)}
+  .shopcard .sm{font-size:13px;margin-top:6px;color:var(--ink)}
+  .shopcard .sbtns{display:flex;gap:8px;margin-top:9px}
+  .sbtn{font-size:12px;border:1px solid var(--line);background:#fff;border-radius:14px;
+        padding:5px 12px;color:var(--green);cursor:pointer;text-decoration:none}
+  .sbtn.del{color:var(--alert)}
+  form.shopform,form.expform{background:var(--card);border:1px solid var(--line);border-radius:16px;
+        padding:14px 16px;margin:14px 0;box-shadow:0 2px 6px rgba(43,38,32,.05)}
+  .frow{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap}
+  .frow>*{flex:1;min-width:0}
+  input[type=text],input[type=number],input[type=date],input[type=url],select{
+        width:100%;border:1px solid var(--line);border-radius:10px;background:#fbf8f2;
+        font-family:inherit;font-size:13.5px;padding:9px 11px;color:var(--ink)}
+  .fbtn{width:100%;border:none;background:var(--green);color:#fff;border-radius:12px;
+        padding:11px;font-size:14.5px;font-weight:600;cursor:pointer;margin-top:6px}
+  .flabel{font-size:12px;color:var(--sub);margin:6px 0 3px}
+
+  /* ---------- 记账 Tab ---------- */
+  .sumcard{background:var(--card);border:1px solid var(--line);border-radius:16px;
+           padding:14px 16px;margin:12px 0;box-shadow:0 2px 6px rgba(43,38,32,.05)}
+  .sumcard .big{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;
+                font-family:"Songti SC","STSong",serif}
+  .sumcard .small{font-size:12px;color:var(--sub)}
+  .progress{height:10px;background:#efe9dd;border-radius:5px;overflow:hidden;margin-top:10px}
+  .progress i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:5px}
+  .pie{display:flex;align-items:center;gap:16px;margin-top:10px}
+  .piechart{width:110px;height:110px;border-radius:50%;flex:none;background:#efe9dd}
+  .pielegend{font-size:12.5px;line-height:2}
+  .pielegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .daybars{display:flex;align-items:flex-end;gap:5px;height:80px;margin-top:12px;
+           border-bottom:1px solid var(--line);padding-bottom:1px}
+  .dbar{flex:1;background:var(--green);border-radius:4px 4px 0 0;min-height:3px;opacity:.85;position:relative}
+  .dbar span{position:absolute;bottom:-18px;left:0;right:0;text-align:center;font-size:9px;color:var(--sub);white-space:nowrap}
+  .exprow{display:flex;align-items:center;gap:8px;background:#fbf8f2;border-radius:12px;
+          padding:10px 12px;margin:7px 0;font-size:13.5px}
+  .exprow .ec{flex:none;font-size:11px;padding:2px 8px;border-radius:9px;color:#fff}
+  .exprow .em{flex:1;min-width:0}
+  .exprow .em .en{font-size:12px;color:var(--sub)}
+  .exprow .ea{flex:none;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+  .exprow .ea .cny{font-size:11px;color:var(--sub);font-weight:400}
+  .exprow .edel{flex:none;color:#c8c4bb;font-size:16px;cursor:pointer;padding:0 4px}
+  .micbtn{border:1px solid var(--line);background:#fff;border-radius:16px;padding:8px 14px;
+          font-size:13px;color:var(--green);cursor:pointer}
+  .micbtn.rec{background:#fdf3f1;border-color:var(--alert);color:var(--alert)}
+  .segcur{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex:none!important}
+  .segcur span{padding:9px 14px;font-size:13.5px;cursor:pointer;background:#fbf8f2;color:var(--sub)}
+  .segcur span.on{background:var(--green);color:#fff;font-weight:600}
+  .curtag{font-size:11px;color:var(--sub)}
 </style>
 </head>
 <body>
+
+<!-- ================= Hero ================= -->
+<header class="hero">
+  <h1>意大利，慢一点。</h1>
+  <div class="latin">Italia, piano piano.</div>
+  <div class="range num">9/23 – 10/8 · 16 天 · 威尼斯 · 多洛米蒂 · 佛罗伦萨 · 罗马 · 布鲁塞尔</div>
+  <div class="caps">
+    <span class="cap" id="capCountdown">距出发 …</span>
+    <span class="cap">城市 <b>5</b></span>
+    <span class="cap">已锁定预订 <b>20</b></span>
+    <span class="cap" id="capWeather">☀️ 天气加载中</span>
+  </div>
+  <svg class="hills" viewBox="0 0 640 64" preserveAspectRatio="none">
+    <path d="M0,64 L0,40 Q80,10 160,34 T320,30 T480,38 T640,24 L640,64 Z" fill="none" stroke="#f7f2ea" stroke-width="1.6"/>
+    <path d="M0,64 L0,52 Q120,26 240,44 T480,50 T640,40 L640,64 Z" fill="none" stroke="#f7f2ea" stroke-width="1.2" opacity=".7"/>
+  </svg>
+</header>
+
 <div class="wrap">
-  <header>
-    <h1>🇮🇹 意大利小时级旅行计划</h1>
-    <div class="meta">2026.09.23 – 10.08 · 威尼斯 · 多洛米蒂 · 佛罗伦萨 · 罗马 · 布鲁塞尔</div>
-    <span class="ver">v1.6 票据版 · 更新于 2026-09-19（依据已购机票/火车票/住宿/门票）</span>
-  </header>
 
-  <div class="tabs">
-    <div class="tab on" data-t="trip">🗓 行程</div>
-    <div class="tab" data-t="prep">✅ 行前核对</div>
-    <div class="tab" data-t="money">💰 预算</div>
+<!-- ================= Tab 1 行程 ================= -->
+<div class="pane on" id="pane-trip">
+  <div class="alert red">
+    <div class="t">⚠️ 9/25–26 全国总罢工（已确认）</div>
+    你们的进山火车是 <b>9/25 10:48</b>——<b>不在 6:00–9:00 保障时段内</b>。9/23 起每天查 Trenitalia「罢工保障车次清单」（罢工前 1–2 天公布），若车次被取消：按规则免费退改，换保障清单内的车次；山区 350 公交无保障，终极兜底 Bolzano 打车 €90–120。官方日历：scioperi.mit.gov.it
+  </div>
+  <div class="alert blue">
+    <div class="t">🧳 维也纳转机：行李可能不直挂</div>
+    北京值机时确认行李标签终点；若只到维也纳：入境→取行李→T3 转 T1→瑞安航空重新托运（FR781 截止以 App 为准）。
   </div>
 
-  <!-- ============ 行程 ============ -->
-  <div class="pane on" id="trip">
-    <div class="alert">
-      <div class="t">⚠️ 9/25–26 全国总罢工（已确认）</div>
-      你们的进山火车是 <b>9/25 10:48</b>——<b>不在 6:00–9:00 保障时段内</b>。9/23 起每天查 Trenitalia「罢工保障车次清单」（罢工前 1–2 天公布），若车次被取消：按规则免费退改，换保障清单内的车次；山区 350 公交无保障，终极兜底 Bolzano 打车 €90–120。官方日历：scioperi.mit.gov.it
+  <div class="datestrip" id="datestrip"></div>
+  <div class="tip">👇 点击每一天的卡片，展开小时级时间轴与当日地图。● 已购固定节点 ｜ ◇ 建议时间 ｜ △ 仍需确认</div>
+  <div id="days"></div>
+
+  <details class="fold">
+    <summary>✅ 行前核对清单</summary>
+    <div class="fbody">
+      <h3 class="sec">优先级 A · 必须确认</h3>
+      <div id="checkA"></div>
+      <h3 class="sec">优先级 B · 建议准备</h3>
+      <div id="checkB"></div>
+      <h3 class="sec">酒店电话速查</h3>
+      <table>
+        <tr><th>城市</th><th>酒店</th><th>电话</th></tr>
+        <tr><td>威尼斯</td><td>B&B Da Nina Venezia</td><td>+39 320 679 5522</td></tr>
+        <tr><td>奥蒂塞伊</td><td>Residence Granvara</td><td>+39 335 816 3053</td></tr>
+        <tr><td>佛罗伦萨</td><td>Da Mario Guesthouse</td><td>+39 055 239 6349</td></tr>
+        <tr><td>罗马</td><td>Navona Stay</td><td>+39 06 8586 6351</td></tr>
+        <tr><td>布鲁塞尔</td><td>Bedford Hotel</td><td>+32 2 507 0000</td></tr>
+      </table>
     </div>
-    <div class="alert" style="background:#f0f4fa;border-color:#d5e0ee">
-      <div class="t" style="color:#33517a">🧳 维也纳转机：行李可能不直挂</div>
-      北京值机时确认行李标签终点；若只到维也纳：入境→取行李→T3 转 T1→瑞安航空重新托运（FR781 截止以 App 为准）。
-    </div>
-    <div class="tip">👇 点击每一天的卡片，展开小时级安排与执行提示。● 已购固定节点 ｜ ◇ 建议时间 ｜ △ 仍需确认</div>
-    <div id="days"></div>
-  </div>
+  </details>
 
-  <!-- ============ 行前核对 ============ -->
-  <div class="pane" id="prep">
-    <h3 class="sec">优先级 A · 必须确认</h3>
-    <div id="checkA"></div>
-    <h3 class="sec">优先级 B · 建议准备</h3>
-    <div id="checkB"></div>
-    <h3 class="sec">酒店电话速查</h3>
-    <table>
-      <tr><th>城市</th><th>酒店</th><th>电话</th></tr>
-      <tr><td>威尼斯</td><td>B&B Da Nina Venezia</td><td>+39 320 679 5522</td></tr>
-      <tr><td>奥蒂塞伊</td><td>Residence Granvara</td><td>+39 335 816 3053</td></tr>
-      <tr><td>佛罗伦萨</td><td>Da Mario Guesthouse</td><td>+39 055 239 6349</td></tr>
-      <tr><td>罗马</td><td>Navona Stay</td><td>+39 06 8586 6351</td></tr>
-      <tr><td>布鲁塞尔</td><td>Bedford Hotel</td><td>+32 2 507 0000</td></tr>
-    </table>
-    <h3 class="sec">已锁定预订总览</h3>
-    <table id="bookings"></table>
-  </div>
-
-  <!-- ============ 预算 ============ -->
-  <div class="pane" id="money">
-    <table>
-      <tr><th>项目</th><th>最小档</th><th>最大档</th></tr>
-      <tr><td>住宿（计划口径 12 晚）</td><td>¥17,200</td><td>¥29,760</td></tr>
-      <tr><td>餐饮 13 天</td><td>¥13,520</td><td>¥17,680</td></tr>
-      <tr><td>城际+市内交通</td><td>¥5,000</td><td>¥7,000</td></tr>
-      <tr><td>门票+活动</td><td>¥4,400</td><td>¥6,000</td></tr>
-      <tr><td>城市税</td><td>¥960</td><td>¥1,200</td></tr>
-      <tr><td>签证+机票+保险杂项</td><td>¥11,200</td><td>¥17,000</td></tr>
-      <tr><td><b>合计（人均）</b></td><td><b>¥52,280</b><br>(¥26,140)</td><td><b>¥78,640</b><br>(¥39,320)</td></tr>
-    </table>
-    <div class="tip">💡 上表为 7 月规划口径（罗马直飞方案）。实际方案已改为布鲁塞尔中转+1 晚酒店，且机票/酒店/门票多已实付——实付金额请填入 意大利旅行预算表.xlsx 的「实际花费」列对照。</div>
-  </div>
-
-  <footer>意大利旅行计划 v1.6 · 票据版 · 2026-09-19 · 一路顺风 🍝</footer>
+  <details class="fold">
+    <summary>🔒 已锁定预订总览</summary>
+    <div class="fbody"><table id="bookings"></table></div>
+  </details>
 </div>
 
+<!-- ================= Tab 2 天气穿搭 ================= -->
+<div class="pane" id="pane-weather">
+  <div class="wrefresh">
+    <span id="wUpdated">天气：尚未加载</span>
+    <button id="wRefreshBtn">↻ 手动刷新</button>
+  </div>
+  <div id="wList"></div>
+  <div id="wFail"></div>
+</div>
+
+<!-- ================= Tab 3 探店 ================= -->
+<div class="pane" id="pane-shops">
+  <h3 class="sec">收藏夹 · 想去的店</h3>
+  <div id="shopList"></div>
+  <h3 class="sec">添加一家店</h3>
+  <form class="shopform" id="shopForm">
+    <div class="frow"><input type="text" id="shopName" placeholder="店名 *" required></div>
+    <div class="frow">
+      <select id="shopType">
+        <option>咖啡</option><option>餐厅</option><option>gelato</option>
+        <option>酒庄</option><option>其他</option>
+      </select>
+      <input type="text" id="shopCity" placeholder="城市 *" required>
+    </div>
+    <div class="frow"><input type="text" id="shopNote" placeholder="备注（吃什么、怎么去…）"></div>
+    <div class="frow"><input type="url" id="shopLink" placeholder="Google Maps 链接（可选）"></div>
+    <button type="submit" class="fbtn">＋ 收藏这家店</button>
+  </form>
+</div>
+
+<!-- ================= Tab 4 记账 ================= -->
+<div class="pane" id="pane-exp">
+  <div class="sumcard">
+    <div class="flabel">预算对照 · 两人总预算 ¥52,300–78,600</div>
+    <div class="big" id="sumCny">¥0</div>
+    <div class="small" id="sumDetail">暂无支出记录</div>
+    <div class="progress"><i id="budgetBar" style="width:0%"></i></div>
+    <div class="small" style="margin-top:6px" id="budgetTxt">已花 0%（按下限 ¥52,300 计）</div>
+    <div class="small" style="margin-top:8px" id="rateTxt">汇率加载中…</div>
+  </div>
+
+  <details class="fold">
+    <summary>📊 原规划预算表（v1.7 口径）</summary>
+    <div class="fbody">
+      <table>
+        <tr><th>项目</th><th>最小档</th><th>最大档</th></tr>
+        <tr><td>住宿（计划口径 12 晚）</td><td>¥17,200</td><td>¥29,760</td></tr>
+        <tr><td>餐饮 13 天</td><td>¥13,520</td><td>¥17,680</td></tr>
+        <tr><td>城际+市内交通</td><td>¥5,000</td><td>¥7,000</td></tr>
+        <tr><td>门票+活动</td><td>¥4,400</td><td>¥6,000</td></tr>
+        <tr><td>城市税</td><td>¥960</td><td>¥1,200</td></tr>
+        <tr><td>签证+机票+保险杂项</td><td>¥11,200</td><td>¥17,000</td></tr>
+        <tr><td><b>合计（人均）</b></td><td><b>¥52,280</b><br>(¥26,140)</td><td><b>¥78,640</b><br>(¥39,320)</td></tr>
+      </table>
+      <div class="tip">💡 上表为 7 月规划口径（罗马直飞方案）。实际方案已改为布鲁塞尔中转+1 晚酒店，且机票/酒店/门票多已实付——实付金额请填入 意大利旅行预算表.xlsx 的「实际花费」列对照。</div>
+    </div>
+  </details>
+
+  <h3 class="sec">记一笔</h3>
+  <form class="expform" id="expForm">
+    <div class="frow">
+      <input type="number" id="expAmt" placeholder="金额 *" step="0.01" min="0" required>
+      <div class="segcur"><span class="on" data-cur="EUR">€ EUR</span><span data-cur="CNY">¥ CNY</span></div>
+    </div>
+    <div class="frow">
+      <select id="expCat">
+        <option>餐饮</option><option>交通</option><option>住宿</option>
+        <option>门票</option><option>购物</option><option>其他</option>
+      </select>
+      <select id="expPayer"><option>共同</option><option>我</option><option>男朋友</option></select>
+    </div>
+    <div class="frow">
+      <input type="date" id="expDate">
+      <input type="text" id="expNote" placeholder="备注（午餐、咖啡…）">
+    </div>
+    <div class="frow" id="micRow" style="display:none">
+      <button type="button" class="micbtn" id="micBtn">🎙 语音录入（如：午餐 38 欧）</button>
+    </div>
+    <div class="curtag" id="expCnyHint"></div>
+    <button type="submit" class="fbtn">记一笔</button>
+  </form>
+
+  <h3 class="sec">统计</h3>
+  <div class="sumcard">
+    <div class="flabel">按类别（折 CNY）</div>
+    <div class="pie"><div class="piechart" id="pieChart"></div><div class="pielegend" id="pieLegend">暂无数据</div></div>
+    <div class="flabel" style="margin-top:18px">按日分布（折 CNY）</div>
+    <div class="daybars" id="dayBars"><span style="font-size:12px;color:var(--sub)">暂无数据</span></div>
+    <div style="height:22px"></div>
+  </div>
+
+  <h3 class="sec">账目明细</h3>
+  <div id="expList"></div>
+</div>
+
+<footer>
+  部署于 GitHub Pages · 版本 v2.0<br>
+  意大利旅行工作台 · 2026.09.23 – 10.08 · 一路顺风 🍝
+</footer>
+</div>
+
+<!-- ================= 景点 Bottom Sheet ================= -->
+<div class="sheetmask" id="sheetMask"></div>
+<div class="sheet" id="sheet">
+  <div class="grab"></div>
+  <h4 id="shName"></h4>
+  <div class="intro" id="shIntro"></div>
+  <div class="detail2" id="shDetail"></div>
+  <div class="tipbox" id="shTipWrap"><b>💡 小贴士</b>　<span id="shTip"></span></div>
+  <a class="gmapbtn" id="shMap" target="_blank" rel="noopener">📍 在 Google 地图中打开</a>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-/* ---------- 行程数据（小时级，票据版） ---------- */
+/* =========================================================
+   v2.0 旅行工作台 · 数据层（事实数据原样迁移自 v1.7，零改动）
+========================================================= */
 const SEG = { "威尼斯":"var(--venice)", "多洛米蒂":"var(--dolo)", "佛罗伦萨":"var(--flor)", "罗马":"var(--rome)", "布鲁塞尔":"var(--bru)", "机上":"#999" };
 const DAYS = [
  {d:"9/23",w:"三",seg:"机上",plan:"北京 → 西安｜启程（MU2122 21:00–23:15）",stay:"机上",rows:[
@@ -281,22 +563,7 @@ const DAYS = [
    ["05:00","抵达北京，入境回家"]],
   note:"欢迎回家！回来记得把实付金额填进预算表「实际花费」列。"},
 ];
-document.getElementById("days").innerHTML = DAYS.map(d=>{
-  const strike = d.strike ? " strike" : "";
-  const badge = d.seg==="机上" ? "" : `<span class="badge" style="background:${SEG[d.seg]}">${d.seg}</span>`;
-  const rows = d.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("");
-  return `<div class="day${strike}">
-    <div class="dt"><span class="d">${d.d}</span><span class="w">周${d.w}</span>${badge}<span class="chev">›</span></div>
-    <div class="plan">${d.plan}</div>
-    <div class="stay">${d.stay}</div>
-    <div class="detail">
-      <table><tr><th>时间</th><th>安排</th></tr>${rows}</table>
-      <div class="keynote"><b>📌 当日关键提醒</b>　${d.note}</div>
-    </div>
-  </div>`;
-}).join("");
 
-/* ---------- 行前核对 ---------- */
 const A = [
  ["北京值机确认行李是否直挂维也纳","票据提示可能无法直挂；按「入境—取行李—T3 转 T1—瑞安重新托运」预案执行"],
  ["Gardena Card 预约 Seceda 上山时段","9/23 起可用卡序列号预约 9/26 时段；9/25 在奥蒂塞伊领取实体卡"],
@@ -310,24 +577,7 @@ const B = [
  ["罗马梵蒂冈轻装","安检排队常态；不带大包；博尔盖塞提前 45 分钟到"],
  ["大交通余量","火车提前 40 分钟到站、飞机提前 90–120 分钟到机场；站台以当天屏幕为准"],
 ];
-function renderChecks(id, list, store){
-  const saved = JSON.parse(localStorage.getItem(store)||"{}");
-  document.getElementById(id).innerHTML = list.map((c,i)=>`
-    <div class="item ${saved[i]?"done":""}">
-      <input type="checkbox" id="${store}${i}" ${saved[i]?"checked":""}>
-      <div><label for="${store}${i}"><b>${c[0]}</b></label><div class="note">${c[1]}</div></div>
-    </div>`).join("");
-  list.forEach((_,i)=>{
-    document.getElementById(store+i).addEventListener("change",e=>{
-      saved[i]=e.target.checked; localStorage.setItem(store,JSON.stringify(saved));
-      e.target.closest(".item").classList.toggle("done",e.target.checked);
-    });
-  });
-}
-renderChecks("checkA", A, "prepA");
-renderChecks("checkB", B, "prepB");
 
-/* ---------- 已锁定预订 ---------- */
 const BK = [
  ["9/23","MU2122 北京大兴→西安","21:00–23:15","已购｜行李联运确认中"],
  ["9/24","MU5063 西安→维也纳","01:30–06:10","已购｜抵达 T3"],
@@ -350,26 +600,593 @@ const BK = [
  ["10/6–7","Bedford Hotel","1 晚","Rue du Midi 135"],
  ["10/7–8","HU492 布鲁塞尔→北京","13:20–次日 05:00","已购｜抵达 T2"],
 ];
+
+/* ---------- 景点库 SPOTS（规格书提供，坐标兼作每日地图 marker） ---------- */
+const SPOTS = [
+ {name:"圣马可广场",intro:"威尼斯的客厅，拜占庭金底马赛克。",detail:"圣马可广场与圣马可大教堂（Basilica）是威尼斯的心脏，教堂穹顶铺满拜占庭时期的金底马赛克，被称为「金色教堂」。广场四周环绕总督宫与百年咖啡馆，傍晚钟声与鸽群是它的经典画面。",tip:"清晨或黄昏人少。",lat:45.434,lng:12.338,day:["9/24"],keys:["圣马可广场","圣马可"]},
+ {name:"Dorsoduro / Zattere",intro:"本地大学区与画廊区，运河南岸日落散步道。",detail:"Dorsoduro 是威尼斯最有生活气息的区域，遍布画廊、学生咖啡馆与小酒馆。Zattere 滨水步道面向朱代卡运河，是看日落和吃 gelato 散步的最佳路线。",tip:"日落前 1 小时到 Zattere，光线最好。",lat:45.429,lng:12.327,day:["9/24"],keys:["Dorsoduro","Zattere"]},
+ {name:"Seceda 刀锋山",intro:"多洛米蒂标志，一侧草甸一侧断崖的「刀锋」山脊线。",detail:"Seceda 山脊是多洛米蒂最上镜的地标：南坡是平缓的金色草甸，北坡则是笔直坠落的白色断崖，如刀刃切开山体。缆车从 Ortisei 直达 2500 米，沿山脊线走 20 分钟即达最佳观景点。",tip:"缆车站 Ortisei 镇东；分时段预约票。",lat:46.598,lng:11.724,day:["9/26"],keys:["Seceda"]},
+ {name:"Alpe di Siusi 休斯高原",intro:"欧洲最大高山草甸，秋季金黄。",detail:"休斯高原是欧洲面积最大的高山草甸，四周被 Sciliar 与 Sassolungo 群峰环抱。秋季草甸变成金黄色，木屋散落其间，是明信片级的多洛米蒂田园风光。",tip:"首批缆车上山人最少；高原紫外线强，注意防晒。",lat:46.540,lng:11.560,day:["9/27"],keys:["Alpe di Siusi","休斯高原"]},
+ {name:"Resciesa",intro:"Ortisei 镇西齿轨缆车，山顶轻松环线约 4.7km。",detail:"Resciesa 由复古齿轨缆车送达山顶，顶上是平缓的高山牧场，可俯瞰整个 Val Gardena 山谷。官方轻松环线约 4.7km，几乎无爬升，老少皆宜。",tip:"季末运营时间较短，留意末班下山缆车。",lat:46.585,lng:11.660,day:["9/28"],keys:["Resciesa"]},
+ {name:"Selva / Vallunga",intro:"山谷尽头冰川 U 型谷轻徒步。",detail:"Vallunga 位于 Selva 镇尽头，是一条平缓的冰川 U 型谷步道，两侧是高耸的白云岩壁，谷内溪流与落叶松相伴，是山区最轻松的经典徒步线。",tip:"原路往返，可按体力随时折返。",lat:46.557,lng:11.760,day:["9/29"],keys:["Vallunga","Selva"]},
+ {name:"圣母百花大教堂",intro:"布鲁内莱斯基穹顶，主教堂免费入场。",detail:"圣母百花大教堂（Duomo）是佛罗伦萨天际线的主角，布鲁内莱斯基设计的巨型穹顶至今仍是世界最大砖造穹顶。主教堂免费入场，登顶穹顶与钟楼需单独购票预约。",tip:"主教堂排队可能很长，留意当日后续固定预约时间。",lat:43.773,lng:11.256,day:["9/30","10/1"],keys:["圣母百花大教堂","大教堂"]},
+ {name:"老桥 / 阿诺河",intro:"中世纪石桥，金匠铺至今营业。",detail:"老桥（Ponte Vecchio）是阿诺河上最古老的中世纪石桥，桥上至今开着一排金匠铺与珠宝店。黄昏时分从桥上看阿诺河两岸，是佛罗伦萨最温柔的风景。",tip:"傍晚沿河岸散步，顺光拍桥身最美。",lat:43.768,lng:11.253,day:["9/30"],keys:["老桥","阿诺河"]},
+ {name:"米开朗琪罗广场",intro:"全城日落观景点。",detail:"米开朗琪罗广场位于阿诺河南岸高地，是俯瞰佛罗伦萨全城的最佳位置：圣母百花穹顶、老桥、阿诺河尽收眼底。日落时分全城染成金色，务必提前占位。",tip:"日落前 40 分钟到；可乘公交或出租上坡，步行台阶较多。",lat:43.763,lng:11.265,day:["10/1"],keys:["米开朗琪罗广场"]},
+ {name:"乌菲兹美术馆",intro:"文艺复兴核心馆藏（波提切利《春》《维纳斯的诞生》）。",detail:"乌菲兹美术馆是文艺复兴艺术的圣殿，镇馆之宝包括波提切利《春》《维纳斯的诞生》、达·芬奇《三博士朝圣》与卡拉瓦乔名作。长廊本身也是美第奇家族的遗产建筑。",tip:"已订 14:15，提前 30 分钟存包安检。",lat:43.769,lng:11.255,day:["10/1"],keys:["乌菲兹"]},
+ {name:"皮恩扎",intro:"教皇庇护二世的文艺复兴「理想城市」，UNESCO。",detail:"皮恩扎是 15 世纪教皇庇护二世按文艺复兴理想重建的山城，整城列入 UNESCO 遗产。Via del Casello 城墙步道是全镇最美视角；必吃 pici 面+Pecorino 羊奶酪。",tip:"Via del Casello 城墙步道黄昏最出片。",lat:43.077,lng:11.679,day:["10/2"],keys:["皮恩扎"]},
+ {name:"小耳朵教堂 Chapel Vitaleta",intro:"《托斯卡纳艳阳下》出镜，两侧柏树如耳朵。",detail:"Vitaleta 小教堂孤立于奥尔恰谷丘陵之上，两侧各一排柏树像两只小耳朵，因此得名。它是托斯卡纳最经典的田园符号，也是电影《托斯卡纳艳阳下》的取景地。",tip:"停车场步行 10 分钟。",lat:43.087,lng:11.625,day:["10/2"],keys:["小耳朵教堂","Vitaleta"]},
+ {name:"Podere Belvedere 机位",intro:"SP146 沿线，托斯卡纳最经典明信片画面，需长焦。",detail:"Podere Belvedere 农舍位于 SP146 公路旁的丘陵顶，晨雾与丝柏环绕的画面是托斯卡纳出镜率最高的明信片机位。最佳拍摄点在公路沿线的观景台，需要长焦压缩空间。",tip:"需长焦；清晨有雾时最梦幻。",lat:43.062,lng:11.610,day:["10/2"],keys:["Podere Belvedere","Belvedere","SP146"]},
+ {name:"Monticchiello",intro:"无商业的静谧中世纪小村，SP88 之字弯机位。",detail:"Monticchiello 是奥尔恰谷中几乎没有商业气息的中世纪小村，石巷静谧，村口 SP88 公路的之字弯与柏树是经典的公路摄影机位。",tip:"SP88 之字弯轻微绕路约 10 分钟，值得。",lat:43.064,lng:11.722,day:["10/2"],keys:["Monticchiello"]},
+ {name:"Capitoni 酒庄",intro:"皮恩扎城外 3km 家庭酒庄，Orcia DOC Sangiovese。",detail:"Capitoni 是皮恩扎城外 3 公里的家族酒庄，专注 Orcia DOC 产区的 Sangiovese。品鉴在葡萄园旁的农舍进行，可以喝到别处少见的奥尔恰谷风土表达。",tip:"品鉴免费需预约（已约 15:00）。",lat:43.062,lng:11.700,day:["10/2"],keys:["Capitoni"]},
+ {name:"博尔盖塞美术馆",intro:"贝尼尼雕塑+卡拉瓦乔，预约制 2 小时场次。",detail:"博尔盖塞美术馆藏有贝尼尼最巅峰的雕塑《阿波罗与达芙妮》《普鲁托与普洛塞尔皮娜》，以及卡拉瓦乔六幅油画。全馆严格预约制，每场 2 小时，人流控制极佳，体验一流。",tip:"已订 10/3 16:00，提前 45–60 分钟取票，大包须寄存。",lat:41.914,lng:12.492,day:["10/3"],keys:["博尔盖塞"]},
+ {name:"苹丘 Pincio",intro:"博尔盖塞公园西缘日落台，俯瞰人民广场。",detail:"苹丘（Pincio）位于博尔盖塞别墅公园西缘的台地上，露台正对人民广场与圣彼得穹顶方向，是罗马人自己最爱的日落散步点。",tip:"日落前占西侧栏杆位，顺光拍人民广场。",lat:41.911,lng:12.479,day:["10/3"],keys:["Pincio","苹丘"]},
+ {name:"斗兽场 + 古罗马广场 + 帕拉蒂尼",intro:"首个周日免费日 07:15 现场排队领票，先到先得。",detail:"斗兽场是古罗马最大的圆形竞技场；紧邻的古罗马广场是帝国政治生活的心脏，帕拉蒂尼山则是罗马建城传说的发源地。三个遗址一张通票，构成罗马最硬核的半日历史轴。",tip:"首个周日免费日 07:15 现场排队领票，先到先得。",lat:41.890,lng:12.492,day:["10/4"],keys:["斗兽场","古罗马广场","帕拉蒂尼"]},
+ {name:"万神殿",intro:"保存最完好的古罗马建筑，穹顶天眼。",detail:"万神殿建于公元 125 年前后，是世界上保存最完好的古罗马建筑。直径 43 米的混凝土穹顶至今仍是同类最大，穹顶中央 9 米的「天眼」是唯一光源，雨天可见雨柱倾泻而下。",tip:"首个周日免费仍可能排队，预留时间。",lat:41.899,lng:12.477,day:["10/4"],keys:["万神殿"]},
+ {name:"纳沃纳广场",intro:"贝尔尼尼四河喷泉，酒店附近。",detail:"纳沃纳广场建在古罗马图密善竞技场的旧址上，呈长椭圆跑道形。广场中央的贝尔尼尼《四河喷泉》是巴洛克雕塑的巅峰之作，周边咖啡馆与街头艺人让这里从早热闹到晚。",tip:"酒店就在附近，适合晚饭后散步看夜景。",lat:41.899,lng:12.473,day:["10/4"],keys:["纳沃纳"]},
+ {name:"梵蒂冈博物馆 + 西斯廷",intro:"拉斐尔画室与米开朗琪罗《创世纪》的终极殿堂。",detail:"梵蒂冈博物馆沿 7 公里展线串联拉斐尔画室、地图廊与无数珍宝，终点是米开朗琪罗《创世纪》与《最后的审判》所在的西斯廷礼拜堂。入口在 Viale Vaticano（非圣彼得广场），遮肩及膝。",tip:"已订 09:00，提前 40 分钟排队安检换票。",lat:41.906,lng:12.454,day:["10/5"],keys:["梵蒂冈"]},
+ {name:"圣彼得大教堂",intro:"免费，安检排队长；夏季开放至 18:00 前后。",detail:"圣彼得大教堂是世界最大教堂，米开朗琪罗设计的穹顶、贝尼尼的青铜华盖与《圣殇》都在其中。教堂免费入场，安检队伍常年很长；登顶穹顶可俯瞰钥匙孔形的圣彼得广场。",tip:"夏季开放至 18:00 前后；宗教场所遮肩及膝。",lat:41.902,lng:12.457,day:["10/5"],keys:["圣彼得大教堂","圣彼得广场","圣彼得"]},
+ {name:"圣天使堡 / 圣天使桥",intro:"哈德良陵墓，桥上天使雕塑群。",detail:"圣天使堡原为哈德良皇帝的陵墓，后改作教皇堡垒与监狱，密道直通梵蒂冈。堡前的圣天使桥两侧立着贝尔尼尼弟子雕刻的十位天使，是台伯河上最上镜的一座桥。",tip:"傍晚顺光拍桥与城堡倒影最佳。",lat:41.903,lng:12.466,day:["10/5"],keys:["圣天使堡","圣天使桥"]},
+ {name:"布鲁塞尔大广场",intro:"欧洲最美广场之一，夜景佳。",detail:"布鲁塞尔大广场（Grand Place）被雨果称为「欧洲最美的广场」，四周环绕哥特式市政厅与金碧辉煌的行会大楼。入夜后灯光点亮立面，比白天更惊艳。",tip:"夜景佳；每两年 8 月有鲜花地毯节。",lat:50.847,lng:4.352,day:["10/6","10/7"],keys:["大广场"]},
+];
+const SPOT_KEYS = [];
+SPOTS.forEach(s=>s.keys.forEach(k=>SPOT_KEYS.push({key:k,spot:s})));
+SPOT_KEYS.sort((a,b)=>b.key.length-a.key.length);
+
+/* ---------- 探店种子数据 ---------- */
+const SEED_SHOPS = [
+ {name:"Trattoria Buca delle Fate",type:"餐厅",city:"皮恩扎",note:"15 世纪拱顶地窖，pici+pecorino",link:""},
+ {name:"Sette di Vino",type:"餐厅",city:"皮恩扎",note:"本地人小馆",link:""},
+ {name:"Bar Il Casello",type:"咖啡",city:"皮恩扎",note:"城墙步道旁，山谷景观位",link:""},
+ {name:"Osteria La Porta",type:"餐厅",city:"Monticchiello",note:"露台看山谷",link:""},
+ {name:"Marusco e Maria",type:"其他",city:"皮恩扎",note:"食品店：pecorino 可真空包装带走",link:""},
+ {name:"Prati 区午餐带",type:"餐厅",city:"罗马",note:"梵蒂冈附近 Prati 区，避开广场正面高价餐厅",link:""},
+];
+
+/* ---------- 天气城市坐标 ---------- */
+const CITY_COORDS = {
+  "威尼斯":[45.44,12.33], "奥蒂塞伊":[46.57,11.67], "佛罗伦萨":[43.77,11.25],
+  "罗马":[41.90,12.50], "布鲁塞尔":[50.85,4.35]
+};
+const DAY_CITY = {
+  "9/23":null, "9/24":"威尼斯", "9/25":"奥蒂塞伊", "9/26":"奥蒂塞伊", "9/27":"奥蒂塞伊",
+  "9/28":"奥蒂塞伊", "9/29":"奥蒂塞伊", "9/30":"佛罗伦萨", "10/1":"佛罗伦萨",
+  "10/2":"佛罗伦萨", "10/3":"罗马", "10/4":"罗马", "10/5":"罗马",
+  "10/6":"布鲁塞尔", "10/7":"布鲁塞尔", "10/8":null
+};
+
+/* ---------- 工具 ---------- */
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function dayISO(d){ const [m,dd]=d.split("/"); return `2026-${m.padStart(2,"0")}-${dd.padStart(2,"0")}`; }
+function todayISO(){ const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
+function fmtHM(ts){ const d=new Date(ts); return `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; }
+const ls = {
+  get(k,def){ try{ const v=localStorage.getItem(k); return v==null?def:JSON.parse(v); }catch(e){ return def; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+
+/* =========================================================
+   Hero 统计胶囊
+========================================================= */
+(function(){
+  const start = new Date("2026-09-23T00:00:00"), end = new Date("2026-10-08T23:59:59");
+  const now = new Date();
+  const el = $("capCountdown");
+  const dayMs = 86400000;
+  if(now < start){
+    el.innerHTML = `距出发 <b>${Math.ceil((start-now)/dayMs)}</b> 天`;
+  }else if(now <= end){
+    el.innerHTML = `行程进行中 · 第 <b>${Math.floor((now-start)/dayMs)+1}</b> 天`;
+  }else{
+    el.innerHTML = `旅程已结束 ✓`;
+  }
+})();
+
+/* =========================================================
+   Tab 1 · 行程渲染
+========================================================= */
+document.getElementById("days").innerHTML = DAYS.map((d,di)=>{
+  const strike = d.strike ? " strike" : "";
+  const badge = d.seg==="机上" ? "" : `<span class="badge" style="background:${SEG[d.seg]}">${d.seg}</span>`;
+  return `<div class="day${strike}" id="day-${di}" data-di="${di}">
+    <div class="dt"><span class="d">${d.d}</span><span class="w">周${d.w}</span>${badge}<span class="chev">›</span></div>
+    <div class="plan">${d.plan}</div>
+    <div class="stay">${d.stay}</div>
+    <div class="detail"></div>
+  </div>`;
+}).join("");
+
+/* 详情延迟渲染（展开时才构建时间轴/地图） */
+function chipText(text, daySpots){
+  let t = esc(text);
+  const used = new Set();
+  for(const {key,spot} of SPOT_KEYS){
+    if(used.has(spot.name)) continue;
+    if(daySpots.includes(spot) && t.includes(key)){
+      t = t.split(key).join(`<span class="spot-chip" data-spot="${esc(spot.name)}">${esc(key)}</span>`);
+      used.add(spot.name);
+    }
+  }
+  return t;
+}
+function renderDetail(di){
+  const card = $("day-"+di), d = DAYS[di];
+  const daySpots = SPOTS.filter(s=>s.day.includes(d.d));
+  const tl = d.rows.map(r=>`<div class="tlrow"><div class="tt">${r[0]}</div><div class="tdot"></div><div class="tc">${chipText(r[1], daySpots)}</div></div>`).join("");
+  const gdir = daySpots.length
+    ? `https://www.google.com/maps/dir/${daySpots.map(s=>s.lat+","+s.lng).join("/")}` : "";
+  const mapHtml = daySpots.length ? `
+    <div class="mapcard">
+      <div class="maptitle">🗺 当日地图（${daySpots.length} 个点位）
+        <span class="mapbtns">
+          <button class="mbtn" data-locate="${di}">📍 我现在在哪</button>
+          <a class="mbtn" href="${gdir}" target="_blank" rel="noopener">Google 今日路线</a>
+        </span>
+      </div>
+      <div class="mapbox" id="map-${di}"></div>
+    </div>` : "";
+  card.querySelector(".detail").innerHTML = `
+    ${mapHtml}
+    <div class="tl">${tl}</div>
+    <div class="keynote"><b>📌 当日关键提醒</b>　${d.note}</div>`;
+}
+
+/* 地图实例缓存 */
+const MAPS = {};
+function initMap(di){
+  if(MAPS[di] || typeof L==="undefined") return;
+  const d = DAYS[di];
+  const daySpots = SPOTS.filter(s=>s.day.includes(d.d));
+  if(!daySpots.length) return;
+  const el = $("map-"+di);
+  if(!el) return;
+  const map = L.map(el,{scrollWheelZoom:false}).setView([daySpots[0].lat,daySpots[0].lng],13);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
+  const pts = [];
+  daySpots.forEach((s,i)=>{
+    const p = [s.lat,s.lng]; pts.push(p);
+    L.marker(p,{icon:L.divIcon({className:"",html:`<div class="nmarker">${i+1}</div>`,iconSize:[24,24],iconAnchor:[12,12]})})
+      .addTo(map).bindPopup(`<b>${esc(s.name)}</b>`);
+  });
+  if(pts.length>1){
+    L.polyline(pts,{dashArray:"5,7",color:"#b06a3b",weight:2}).addTo(map);
+    map.fitBounds(L.latLngBounds(pts).pad(0.18));
+  }
+  MAPS[di] = map;
+  setTimeout(()=>map.invalidateSize(), 80);
+}
+
+/* 卡片点击展开 */
+document.getElementById("days").addEventListener("click",e=>{
+  const chip = e.target.closest(".spot-chip");
+  if(chip){ openSheet(chip.dataset.spot); return; }
+  const loc = e.target.closest("[data-locate]");
+  if(loc){ locateMe(+loc.dataset.locate); return; }
+  if(e.target.closest("a")) return;
+  const card = e.target.closest(".day");
+  if(!card) return;
+  const di = +card.dataset.di;
+  const opening = !card.classList.contains("open");
+  if(opening && !card.querySelector(".detail").innerHTML) renderDetail(di);
+  card.classList.toggle("open");
+  if(opening) setTimeout(()=>initMap(di), 60);
+});
+
+/* 我现在在哪 */
+function locateMe(di){
+  const map = MAPS[di]; if(!map) return;
+  if(!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const p = [pos.coords.latitude, pos.coords.longitude];
+    if(map._meMarker) map.removeLayer(map._meMarker);
+    map._meMarker = L.marker(p,{icon:L.divIcon({className:"",html:`<div class="me-marker"></div>`,iconSize:[16,16],iconAnchor:[8,8]})})
+      .addTo(map).bindPopup("📍 我在这儿").openPopup();
+    map.setView(p, 14);
+  },()=>{ /* 失败静默 */ },{timeout:8000});
+}
+
+/* 日期胶囊条 */
+(function(){
+  const strip = $("datestrip");
+  strip.innerHTML = DAYS.map((d,di)=>{
+    const color = d.seg==="机上" ? "#999" : SEG[d.seg];
+    return `<div class="pill" data-di="${di}">
+      <div class="pd num">${d.d}</div><div class="pw">周${d.w}</div>
+      <span class="dot" style="background:${color}"></span></div>`;
+  }).join("");
+  strip.addEventListener("click",e=>{
+    const p = e.target.closest(".pill"); if(!p) return;
+    const di = +p.dataset.di;
+    strip.querySelectorAll(".pill").forEach(x=>x.classList.remove("on"));
+    p.classList.add("on");
+    const card = $("day-"+di);
+    if(!card.classList.contains("open")){
+      if(!card.querySelector(".detail").innerHTML) renderDetail(di);
+      card.classList.add("open");
+      setTimeout(()=>initMap(di), 60);
+    }
+    card.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+})();
+
+/* 行前核对（沿用旧 localStorage key prepA/prepB 保留勾选状态） */
+function renderChecks(id, list, store){
+  const saved = JSON.parse(localStorage.getItem(store)||"{}");
+  document.getElementById(id).innerHTML = list.map((c,i)=>`
+    <div class="item ${saved[i]?"done":""}">
+      <input type="checkbox" id="${store}${i}" ${saved[i]?"checked":""}>
+      <div><label for="${store}${i}"><b>${c[0]}</b></label><div class="note">${c[1]}</div></div>
+    </div>`).join("");
+  list.forEach((_,i)=>{
+    document.getElementById(store+i).addEventListener("change",e=>{
+      saved[i]=e.target.checked; localStorage.setItem(store,JSON.stringify(saved));
+      e.target.closest(".item").classList.toggle("done",e.target.checked);
+    });
+  });
+}
+renderChecks("checkA", A, "prepA");
+renderChecks("checkB", B, "prepB");
+
+/* 已锁定预订 */
 document.getElementById("bookings").innerHTML =
   "<tr><th>日期</th><th>项目</th><th>时间</th><th>状态/地址</th></tr>" +
   BK.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join("");
 
-/* ---------- 日期卡片展开 ---------- */
-document.getElementById("days").addEventListener("click",e=>{
-  const card = e.target.closest(".day");
-  if(card) card.classList.toggle("open");
-});
+/* =========================================================
+   景点 Bottom Sheet
+========================================================= */
+function openSheet(name){
+  const s = SPOTS.find(x=>x.name===name); if(!s) return;
+  $("shName").textContent = s.name;
+  $("shIntro").textContent = s.intro;
+  $("shDetail").textContent = s.detail;
+  if(s.tip){ $("shTipWrap").style.display=""; $("shTip").textContent = s.tip; }
+  else $("shTipWrap").style.display="none";
+  $("shMap").href = `https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}`;
+  $("sheet").classList.add("on"); $("sheetMask").classList.add("on");
+}
+function closeSheet(){ $("sheet").classList.remove("on"); $("sheetMask").classList.remove("on"); }
+$("sheetMask").addEventListener("click", closeSheet);
 
-/* ---------- tabs ---------- */
-document.querySelectorAll(".tab").forEach(t=>{
+/* =========================================================
+   Tab 2 · 天气穿搭（Open-Meteo）
+========================================================= */
+const W_ICON = {0:"☀️",1:"🌤",2:"⛅",3:"☁️",45:"🌫",48:"🌫",51:"🌦",53:"🌦",55:"🌦",
+  61:"🌧",63:"🌧",65:"🌧",66:"🌧",67:"🌧",71:"🌨",73:"🌨",75:"🌨",77:"🌨",
+  80:"🌦",81:"🌦",82:"🌦",85:"🌨",86:"🌨",95:"⛈",96:"⛈",99:"⛈"};
+const W_TEXT = {0:"晴",1:"基本晴",2:"局部多云",3:"阴",45:"雾",48:"冻雾",51:"小毛毛雨",53:"毛毛雨",55:"浓毛毛雨",
+  61:"小雨",63:"中雨",65:"大雨",66:"冻雨",67:"强冻雨",71:"小雪",73:"中雪",75:"大雪",77:"雪粒",
+  80:"阵雨",81:"强阵雨",82:"暴雨",85:"阵雪",86:"强阵雪",95:"雷暴",96:"雷暴冰雹",99:"强雷暴冰雹"};
+
+async function fetchWeather(force){
+  const cache = ls.get("itv2_weather", null);
+  if(!force && cache && (Date.now()-cache.ts) < 6*3600*1000){ renderWeather(cache.data, cache.ts); return; }
+  try{
+    const cities = Object.entries(CITY_COORDS);
+    const url = "https://api.open-meteo.com/v1/forecast?latitude="+cities.map(c=>c[1][0]).join(",")+
+      "&longitude="+cities.map(c=>c[1][1]).join(",")+
+      "&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode,sunrise,sunset"+
+      "&timezone=Europe%2FRome&forecast_days=16";
+    const res = await fetch(url);
+    if(!res.ok) throw new Error("http "+res.status);
+    const json = await res.json();
+    const arr = Array.isArray(json) ? json : [json];
+    const data = {};
+    cities.forEach((c,i)=>{ data[c[0]] = arr[i] && arr[i].daily ? arr[i].daily : null; });
+    const ts = Date.now();
+    ls.set("itv2_weather",{ts, data});
+    renderWeather(data, ts);
+  }catch(e){
+    const old = ls.get("itv2_weather", null);
+    if(old){ renderWeather(old.data, old.ts); }
+    else $("wFail").innerHTML = `<div class="wfail">⚠️ 天气数据暂时拉取失败，请检查网络后点「手动刷新」。行程事实不受影响。</div>`;
+    $("wUpdated").textContent = "天气：更新失败";
+  }
+}
+function weatherFor(data, city, iso){
+  const daily = city && data[city];
+  if(!daily) return null;
+  const idx = daily.time.indexOf(iso);
+  if(idx<0) return "oor"; // out of range
+  return {
+    max: daily.temperature_2m_max[idx], min: daily.temperature_2m_min[idx],
+    pop: daily.precipitation_probability_max ? daily.precipitation_probability_max[idx] : null,
+    code: daily.weathercode[idx],
+    sr: daily.sunrise[idx], ss: daily.sunset[idx]
+  };
+}
+function renderWeather(data, ts){
+  $("wFail").innerHTML = "";
+  $("wUpdated").textContent = "更新于 " + fmtHM(ts) + "（缓存 6 小时）";
+  const nowIso = todayISO();
+  $("wList").innerHTML = DAYS.map(d=>{
+    const city = DAY_CITY[d.d];
+    const iso = dayISO(d.d);
+    const w = weatherFor(data, city, iso);
+    let wBody;
+    if(!city){
+      wBody = `<div class="wgrid"><span>✈️ 飞行/机上日，无城市天气</span></div>`;
+    }else if(w==="oor" || !w){
+      wBody = `<div class="wgrid"><span>🕐 尚未进入预报期</span></div>`;
+    }else{
+      const icon = W_ICON[w.code]||"🌡", wt = W_TEXT[w.code]||"";
+      const sr = w.sr ? w.sr.slice(11,16) : "--", ss = w.ss ? w.ss.slice(11,16) : "--";
+      let tips = [];
+      if(w.min != null && w.min < 12) tips.push("早晚低于 12°C，加外套");
+      if(w.max != null && w.max < 12) tips.push("全天偏冷，外套必备");
+      if(w.pop != null && w.pop > 40) tips.push("降水概率高，带伞/防雨");
+      if(["9/26","9/27","9/28","9/29"].includes(d.d)) tips.push("山区日：登山鞋＋防风层");
+      if(d.d==="10/5") tips.push("梵蒂冈日：遮肩及膝着装");
+      if(!tips.length) tips.push("天气温和，轻便穿搭即可");
+      wBody = `
+        <div class="wgrid">
+          <span>🌡 <b>${w.min==null?"--":Math.round(w.min)}° / ${w.max==null?"--":Math.round(w.max)}°C</b></span>
+          <span>${icon} ${wt}</span>
+          <span>☔ 降水 <b>${w.pop==null?"--":w.pop}%</b></span>
+          <span>🌅 ${sr}　🌇 ${ss}</span>
+        </div>
+        <div class="wadv"><b>穿搭建议</b>　${tips.join("；")}</div>`;
+    }
+    const wIconEl = (w && w!=="oor") ? `<span class="wicon">${W_ICON[w.code]||"🌡"}</span>` : "";
+    const own = ls.get("itv2_outfits",{})[d.d]||"";
+    return `<div class="wcard">
+      <div class="wh"><span class="wd num">${d.d} 周${d.w}</span>
+        <span class="wc">${city||"机上"}</span>${wIconEl}</div>
+      ${wBody}
+      <textarea class="ownoutfit" data-day="${d.d}" placeholder="✍️ 我的穿搭：记录今天的搭配…">${esc(own)}</textarea>
+    </div>`;
+  }).join("");
+  /* Hero 天气胶囊：今天或出发日的城市天气 */
+  try{
+    let heroCity = DAY_CITY[DAYS.find(d=>dayISO(d.d)===nowIso)?.d] || "威尼斯";
+    const w = weatherFor(data, heroCity, nowIso) || weatherFor(data, "威尼斯", "2026-09-24");
+    if(w && w!=="oor") $("capWeather").innerHTML = `${W_ICON[w.code]||"🌡"} ${heroCity} ${Math.round(w.max)}°`;
+    else $("capWeather").textContent = "🌡 天气待更新";
+  }catch(e){ $("capWeather").textContent = "🌡 天气待更新"; }
+  /* 我的穿搭持久化 */
+  document.querySelectorAll(".ownoutfit").forEach(t=>{
+    t.addEventListener("change",()=>{
+      const all = ls.get("itv2_outfits",{});
+      all[t.dataset.day] = t.value;
+      ls.set("itv2_outfits", all);
+    });
+  });
+}
+$("wRefreshBtn").addEventListener("click",()=>fetchWeather(true));
+fetchWeather(false);
+
+/* =========================================================
+   Tab 3 · 探店
+========================================================= */
+function getShops(){
+  let s = ls.get("itv2_shops", null);
+  if(!s){ s = SEED_SHOPS.slice(); ls.set("itv2_shops", s); }
+  return s;
+}
+function renderShops(){
+  const shops = getShops();
+  $("shopList").innerHTML = shops.length ? shops.map((s,i)=>{
+    const link = s.link || ("https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.name+" "+s.city));
+    return `<div class="shopcard">
+      <div class="sh"><span class="sn">${esc(s.name)}</span>
+        <span class="typetag">${esc(s.type)}</span>
+        <span class="sc">${esc(s.city)}</span></div>
+      ${s.note?`<div class="sm">${esc(s.note)}</div>`:""}
+      <div class="sbtns">
+        <a class="sbtn" href="${esc(link)}" target="_blank" rel="noopener">📍 地图</a>
+        <button class="sbtn del" data-del="${i}">删除</button>
+      </div>
+    </div>`;
+  }).join("") : `<div class="tip">还没有收藏的店，在下面添加第一家吧。</div>`;
+  document.querySelectorAll("[data-del]").forEach(b=>{
+    b.addEventListener("click",()=>{
+      const shops = getShops(); shops.splice(+b.dataset.del,1);
+      ls.set("itv2_shops", shops); renderShops();
+    });
+  });
+}
+$("shopForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const shops = getShops();
+  shops.push({
+    name: $("shopName").value.trim(), type: $("shopType").value,
+    city: $("shopCity").value.trim(), note: $("shopNote").value.trim(),
+    link: $("shopLink").value.trim()
+  });
+  ls.set("itv2_shops", shops);
+  e.target.reset(); renderShops();
+});
+renderShops();
+
+/* =========================================================
+   Tab 4 · 记账
+========================================================= */
+const CATS = ["餐饮","交通","住宿","门票","购物","其他"];
+const CAT_COLORS = ["#b06a3b","#3d5245","#b8912f","#6a5a8f","#c0492f","#8a8378"];
+const BUDGET_MIN = 52300, BUDGET_MAX = 78600;
+let curCur = "EUR";
+
+function getRate(){
+  const c = ls.get("itv2_rate", null);
+  if(c && (Date.now()-c.ts) < 24*3600*1000) return Promise.resolve(c.rate);
+  return fetch("https://api.frankfurter.dev/v1/latest?base=EUR&symbols=CNY")
+    .then(r=>r.json())
+    .then(j=>{
+      const rate = j && j.rates && j.rates.CNY ? j.rates.CNY : 7.8;
+      ls.set("itv2_rate",{ts:Date.now(), rate});
+      return rate;
+    })
+    .catch(()=>7.8);
+}
+function getExps(){ return ls.get("itv2_expenses", []); }
+function toCny(e, rate){ return e.cur==="CNY" ? e.amt : e.amt*rate; }
+
+function renderExps(rate){
+  const list = getExps();
+  $("rateTxt").textContent = `汇率 1 EUR ≈ ${rate.toFixed(2)} CNY（frankfurter.dev，缓存 24h；失败兜底 7.8）`;
+  let totalCny=0, totalEur=0;
+  const byCat = {}, byDay = {};
+  list.forEach(e=>{
+    const cny = toCny(e, rate);
+    totalCny += cny;
+    if(e.cur==="EUR") totalEur += e.amt;
+    byCat[e.cat] = (byCat[e.cat]||0)+cny;
+    byDay[e.date] = (byDay[e.date]||0)+cny;
+  });
+  $("sumCny").textContent = "≈ ¥" + Math.round(totalCny).toLocaleString();
+  $("sumDetail").textContent = list.length
+    ? `共 ${list.length} 笔｜EUR 支出 €${totalEur.toFixed(2)} ｜折 CNY ¥${Math.round(totalCny).toLocaleString()}`
+    : "暂无支出记录";
+  const pct = Math.min(100, totalCny/BUDGET_MIN*100);
+  $("budgetBar").style.width = pct.toFixed(1)+"%";
+  $("budgetTxt").textContent = `已花 ${(totalCny/BUDGET_MIN*100).toFixed(1)}%（按下限 ¥${BUDGET_MIN.toLocaleString()} 计；上限 ¥${BUDGET_MAX.toLocaleString()}）`;
+  /* 饼图 */
+  const cats = CATS.filter(c=>byCat[c]);
+  if(cats.length && totalCny>0){
+    let acc=0; const segs=[];
+    cats.forEach(c=>{
+      const from = acc/totalCny*360; acc += byCat[c]; const to = acc/totalCny*360;
+      segs.push(`${CAT_COLORS[CATS.indexOf(c)]} ${from}deg ${to}deg`);
+    });
+    $("pieChart").style.background = `conic-gradient(${segs.join(",")})`;
+    $("pieLegend").innerHTML = cats.map(c=>
+      `<div><i style="background:${CAT_COLORS[CATS.indexOf(c)]}"></i>${c} ¥${Math.round(byCat[c]).toLocaleString()}（${(byCat[c]/totalCny*100).toFixed(0)}%）</div>`).join("");
+  }else{
+    $("pieChart").style.background = "#efe9dd";
+    $("pieLegend").textContent = "暂无数据";
+  }
+  /* 按日条形 */
+  const days = Object.keys(byDay).sort();
+  if(days.length && totalCny>0){
+    const max = Math.max(...days.map(d=>byDay[d]));
+    $("dayBars").innerHTML = days.map(d=>{
+      const h = Math.max(4, byDay[d]/max*76);
+      return `<div class="dbar" style="height:${h}px" title="${d} ¥${Math.round(byDay[d]).toLocaleString()}"><span>${d.slice(5).replace("-","/")}</span></div>`;
+    }).join("");
+  }else{
+    $("dayBars").innerHTML = `<span style="font-size:12px;color:var(--sub)">暂无数据</span>`;
+  }
+  /* 明细 */
+  $("expList").innerHTML = list.length ? list.map((e,i)=>{
+    const ci = CATS.indexOf(e.cat);
+    const sub = e.cur==="EUR" ? `<div class="cny">≈ ¥${Math.round(toCny(e,rate)).toLocaleString()}</div>` : "";
+    return `<div class="exprow">
+      <span class="ec" style="background:${CAT_COLORS[ci<0?5:ci]}">${esc(e.cat)}</span>
+      <span class="em"><b>${esc(e.note||e.cat)}</b><div class="en num">${e.date} · ${esc(e.payer)}</div></span>
+      <span class="ea num">${e.cur==="EUR"?"€":"¥"}${e.amt.toFixed(2)}${sub}</span>
+      <span class="edel" data-edel="${i}">×</span>
+    </div>`;
+  }).join("") : `<div class="tip">还没有账目，用上面的表单记第一笔吧。</div>`;
+  document.querySelectorAll("[data-edel]").forEach(b=>{
+    b.addEventListener("click",()=>{
+      const l = getExps(); l.splice(+b.dataset.edel,1);
+      ls.set("itv2_expenses", l); refreshMoney();
+    });
+  });
+}
+function refreshMoney(){ getRate().then(renderExps); }
+
+/* 币种切换 */
+document.querySelectorAll(".segcur span").forEach(s=>{
+  s.addEventListener("click",()=>{
+    document.querySelectorAll(".segcur span").forEach(x=>x.classList.remove("on"));
+    s.classList.add("on"); curCur = s.dataset.cur; updateCnyHint();
+  });
+});
+function updateCnyHint(){
+  getRate().then(rate=>{
+    const amt = parseFloat($("expAmt").value);
+    $("expCnyHint").textContent = (curCur==="EUR" && amt>0)
+      ? `约合 ¥${(amt*rate).toFixed(0)}（汇率 ${rate.toFixed(2)}）` : "";
+  });
+}
+$("expAmt").addEventListener("input", updateCnyHint);
+
+$("expForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const amt = parseFloat($("expAmt").value);
+  if(!(amt>0)) return;
+  const l = getExps();
+  l.push({
+    amt, cur: curCur, cat: $("expCat").value, payer: $("expPayer").value,
+    date: $("expDate").value || todayISO(), note: $("expNote").value.trim()
+  });
+  ls.set("itv2_expenses", l);
+  e.target.reset(); $("expDate").value = todayISO();
+  document.querySelectorAll(".segcur span").forEach(x=>x.classList.toggle("on",x.dataset.cur==="EUR"));
+  curCur = "EUR"; $("expCnyHint").textContent = "";
+  refreshMoney();
+});
+$("expDate").value = todayISO();
+refreshMoney();
+
+/* 语音录入 */
+(function(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return;
+  $("micRow").style.display = "";
+  const rec = new SR();
+  rec.lang = "zh-CN"; rec.interimResults = false; rec.maxAlternatives = 1;
+  const btn = $("micBtn");
+  btn.addEventListener("click",()=>{
+    btn.classList.add("rec"); btn.textContent = "🎙 正在聆听…";
+    try{ rec.start(); }catch(e){}
+  });
+  rec.onend = ()=>{ btn.classList.remove("rec"); btn.textContent = "🎙 语音录入（如：午餐 38 欧）"; };
+  rec.onerror = ()=>{ btn.textContent = "🎙 识别失败，请重试或手动填写"; };
+  rec.onresult = ev=>{
+    const txt = (ev.results[0] && ev.results[0][0] && ev.results[0][0].transcript) || "";
+    parseVoice(txt);
+  };
+  function parseVoice(txt){
+    const m = txt.match(/(\d+(?:\.\d+)?)/);
+    if(m) $("expAmt").value = m[1];
+    if(/欧|欧元|EUR/i.test(txt)) curCur = "EUR";
+    else if(/元|块|人民币|CNY/i.test(txt)) curCur = "CNY";
+    document.querySelectorAll(".segcur span").forEach(x=>x.classList.toggle("on", x.dataset.cur===curCur));
+    const catMap = [["餐|午餐|晚饭|早餐|吃|咖啡|gelato|Gelato","餐饮"],
+      ["交通|打车|出租|地铁|公交|火车|票|机票","交通"],["住宿|酒店|房费","住宿"],
+      ["门票|博物馆|美术馆|教堂","门票"],["购物|买|手信|纪念品","购物"]];
+    let cat = "其他";
+    for(const [re,c] of catMap){ if(new RegExp(re).test(txt)){ cat = c; break; } }
+    $("expCat").value = cat;
+    $("expNote").value = txt;
+    updateCnyHint();
+  }
+})();
+
+/* =========================================================
+   底部 Tab 切换
+========================================================= */
+document.querySelectorAll(".tabbar .tb").forEach(t=>{
   t.addEventListener("click",()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
+    document.querySelectorAll(".tabbar .tb").forEach(x=>x.classList.remove("on"));
     document.querySelectorAll(".pane").forEach(x=>x.classList.remove("on"));
     t.classList.add("on");
-    document.getElementById(t.dataset.t).classList.add("on");
+    $("pane-"+t.dataset.t).classList.add("on");
     window.scrollTo({top:0});
   });
 });
 </script>
+
+<!-- ================= 底部 Tab 栏 ================= -->
+<nav class="tabbar">
+  <div class="tb on" data-t="trip">
+    <svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4M7.5 13.5h3M7.5 17h6"/></svg>
+    <span>行程</span>
+  </div>
+  <div class="tb" data-t="weather">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.8 1.8M17 17l1.8 1.8M18.8 5.2L17 7M7 17l-1.8 1.8"/></svg>
+    <span>天气穿搭</span>
+  </div>
+  <div class="tb" data-t="shops">
+    <svg viewBox="0 0 24 24"><path d="M4 9.5L5.5 4h13L20 9.5M4 9.5h16M4 9.5V20h16V9.5M9.5 20v-6h5v6"/></svg>
+    <span>探店</span>
+  </div>
+  <div class="tb" data-t="exp">
+    <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10h18M16.5 14.5h2"/></svg>
+    <span>记账</span>
+  </div>
+</nav>
 </body>
 </html>
