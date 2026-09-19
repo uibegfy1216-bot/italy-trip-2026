@@ -774,6 +774,7 @@ function initMap(di){
   }
   MAPS[di] = map;
   setTimeout(()=>map.invalidateSize(), 80);
+  setTimeout(()=>map.invalidateSize(), 450);   /* 展开动画结束后再校准一次，防灰块 */
 }
 
 /* 卡片点击展开 */
