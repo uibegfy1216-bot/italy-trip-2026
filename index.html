@@ -353,6 +353,12 @@ document.getElementById("bookings").innerHTML =
   "<tr><th>日期</th><th>项目</th><th>时间</th><th>状态/地址</th></tr>" +
   BK.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join("");
 
+/* ---------- 日期卡片展开 ---------- */
+document.getElementById("days").addEventListener("click",e=>{
+  const card = e.target.closest(".day");
+  if(card) card.classList.toggle("open");
+});
+
 /* ---------- tabs ---------- */
 document.querySelectorAll(".tab").forEach(t=>{
   t.addEventListener("click",()=>{
