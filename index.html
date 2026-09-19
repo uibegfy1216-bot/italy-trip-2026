@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>意大利旅行规划 · 2026.9.23–10.7</title>
+<title>意大利小时级旅行计划 · 2026.9.23–10.8</title>
 <style>
   :root{
     --bg:#f6f5f2; --card:#ffffff; --ink:#232323; --sub:#8a8a86; --line:#e8e6e1;
-    --venice:#3a7ca5; --dolo:#4a8f6c; --flor:#c06b4a; --rome:#b8912f; --alert:#c0492f;
+    --venice:#3a7ca5; --dolo:#4a8f6c; --flor:#c06b4a; --rome:#b8912f; --bru:#6a5acd; --alert:#c0492f;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
        background:var(--bg);color:var(--ink);line-height:1.65;padding-bottom:60px}
   .wrap{max-width:640px;margin:0 auto;padding:0 14px}
   header{padding:28px 0 6px}
-  h1{font-size:24px;font-weight:700;letter-spacing:.5px}
+  h1{font-size:23px;font-weight:700;letter-spacing:.5px}
   .meta{color:var(--sub);font-size:13px;margin-top:6px}
   .ver{display:inline-block;background:#eee9e2;color:#8a8578;font-size:11px;
        padding:2px 8px;border-radius:10px;margin-top:8px}
@@ -27,7 +27,6 @@
          padding:12px 14px;margin:10px 0;font-size:13.5px}
   .alert b{color:var(--alert)}
   .alert .t{font-weight:700;color:var(--alert);margin-bottom:4px;font-size:14px}
-  /* day cards */
   .day{background:var(--card);border-radius:16px;padding:14px 16px;margin:10px 0;
        box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer}
   .day .dt{display:flex;align-items:baseline;gap:8px}
@@ -41,14 +40,16 @@
              border-top:1px dashed var(--line);padding-top:8px}
   .day .stay::before{content:"🛏 ";}
   .strike{background:#fdf8ec}
-  .detail{display:none;margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+  .detail{display:none;margin-top:10px;border-top:1px solid var(--line);padding-top:6px}
   .day.open .detail{display:block}
-  .detail h4{font-size:12px;color:var(--sub);margin:8px 0 4px;font-weight:600}
-  .detail ul{padding-left:18px;font-size:13px}
-  .detail li{margin:3px 0}
-  .detail .warn{color:var(--alert);font-weight:600}
-  .detail .sub{color:var(--sub)}
-  /* checklist */
+  .detail table{font-size:12.5px;margin:6px 0;box-shadow:none;border:1px solid var(--line)}
+  .detail th{background:#f2efe9;color:#555;font-weight:600}
+  .detail td{text-align:left;vertical-align:top}
+  .detail th:first-child{width:86px;white-space:nowrap}
+  .detail .keynote{background:#fbf7ee;border-radius:10px;padding:9px 12px;font-size:12.5px;margin:8px 0}
+  .detail .keynote b{color:#9a7b1e}
+  .warn{color:var(--alert);font-weight:600}
+  .fx{font-weight:700}
   .item{background:var(--card);border-radius:12px;padding:12px 14px;margin:8px 0;
         display:flex;gap:10px;align-items:flex-start;font-size:14px}
   .item input{margin-top:4px;width:18px;height:18px;accent-color:var(--ink);flex:none}
@@ -58,11 +59,10 @@
   h3.sec::before{content:"";display:inline-block;width:4px;height:14px;background:var(--ink);
         border-radius:2px;margin-right:8px;vertical-align:-2px}
   table{width:100%;border-collapse:collapse;background:var(--card);border-radius:14px;
-        overflow:hidden;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
-  th:first-child,td:first-child{text-align:left}
+        overflow:hidden;font-size:12.5px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line)}
   th{background:#333;color:#fff;font-weight:600}
-  tr:last-child td{border-bottom:none;font-weight:700}
+  tr:last-child td{border-bottom:none}
   .tip{font-size:12px;color:var(--sub);margin-top:10px}
   footer{text-align:center;color:var(--sub);font-size:11px;margin-top:30px}
 </style>
@@ -70,268 +70,288 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>🇮🇹 意大利旅行规划</h1>
-    <div class="meta">两人 · 不自驾 · 2026/9/23 出发 – 10/7 回 · 威尼斯→多洛米蒂→佛罗伦萨→罗马</div>
-    <span class="ver">v1.5 · 更新于 2026-07-18</span>
+    <h1>🇮🇹 意大利小时级旅行计划</h1>
+    <div class="meta">2026.09.23 – 10.08 · 威尼斯 · 多洛米蒂 · 佛罗伦萨 · 罗马 · 布鲁塞尔</div>
+    <span class="ver">v1.6 票据版 · 更新于 2026-09-19（依据已购机票/火车票/住宿/门票）</span>
   </header>
 
   <div class="tabs">
     <div class="tab on" data-t="trip">🗓 行程</div>
-    <div class="tab" data-t="visa">🛂 签证</div>
+    <div class="tab" data-t="prep">✅ 行前核对</div>
     <div class="tab" data-t="money">💰 预算</div>
   </div>
 
   <!-- ============ 行程 ============ -->
   <div class="pane on" id="trip">
     <div class="alert">
-      <div class="t">🔥 本周三件事</div>
-      ① 每天刷 <b>VFS 签证预约</b>（visa.vfsglobal.com/chn/zh/ita，目标 8 月上中旬的号）<br>
-      ② 买<b>申根医疗险</b>（≥€3万，9/23–10/8）＋每天刷 <b>tosca.it 博尔盖塞</b>（见 10/4 票即买）<br>
-      ③ 锁定返程机票 <b>CA940</b>（10/6 罗马 20:30 直飞，国庆涨价前）
+      <div class="t">⚠️ 9/25–26 全国总罢工（已确认）</div>
+      你们的进山火车是 <b>9/25 10:48</b>——<b>不在 6:00–9:00 保障时段内</b>。9/23 起每天查 Trenitalia「罢工保障车次清单」（罢工前 1–2 天公布），若车次被取消：按规则免费退改，换保障清单内的车次；山区 350 公交无保障，终极兜底 Bolzano 打车 €90–120。官方日历：scioperi.mit.gov.it
     </div>
-    <div class="alert strike">
-      <div class="t" style="color:#9a7b1e">⚠️ 罢工提醒</div>
-      <b>9/25–26 全国总罢工已确认</b>。对策：9/25 上午越早进山越好；9/26 在山区原地活动。9 月起每周查 scioperi.mit.gov.it。
+    <div class="alert" style="background:#f0f4fa;border-color:#d5e0ee">
+      <div class="t" style="color:#33517a">🧳 维也纳转机：行李可能不直挂</div>
+      北京值机时确认行李标签终点；若只到维也纳：入境→取行李→T3 转 T1→瑞安航空重新托运（FR781 截止以 App 为准）。
     </div>
-    <div class="tip">👇 点击每一天的卡片，展开逐段交通、预订规则和餐厅推荐</div>
+    <div class="tip">👇 点击每一天的卡片，展开小时级安排与执行提示。● 已购固定节点 ｜ ◇ 建议时间 ｜ △ 仍需确认</div>
     <div id="days"></div>
   </div>
 
-  <!-- ============ 签证 ============ -->
-  <div class="pane" id="visa">
-    <div class="alert">
-      <div class="t">⏰ 瓶颈是预约号，不是审理</div>
-      北京近期 4–8 个工作日出签，但暑期热门国预约排到 ~3 个月后。<b>今天就刷号</b>；刷不到北京的，可换西安/武汉/济南/沈阳（同属北京领区）。递交红线：9/8 前。
-    </div>
-    <h3 class="sec">材料 checklist（可勾选，自动保存）</h3>
-    <div id="checklist"></div>
-    <h3 class="sec">时间表</h3>
-    <div id="timeline"></div>
-    <h3 class="sec">费用（两人）</h3>
+  <!-- ============ 行前核对 ============ -->
+  <div class="pane" id="prep">
+    <h3 class="sec">优先级 A · 必须确认</h3>
+    <div id="checkA"></div>
+    <h3 class="sec">优先级 B · 建议准备</h3>
+    <div id="checkB"></div>
+    <h3 class="sec">酒店电话速查</h3>
     <table>
-      <tr><th>项目</th><th>金额</th></tr>
-      <tr><td>签证费 €90×2</td><td>≈¥1,488</td></tr>
-      <tr><td>VFS 服务费 ×2</td><td>¥156</td></tr>
-      <tr><td>保险 ×2</td><td>¥200–600</td></tr>
-      <tr><td>快递返签 ×2</td><td>≈¥100</td></tr>
-      <tr><td>合计</td><td>≈¥2,100–2,400</td></tr>
+      <tr><th>城市</th><th>酒店</th><th>电话</th></tr>
+      <tr><td>威尼斯</td><td>B&B Da Nina Venezia</td><td>+39 320 679 5522</td></tr>
+      <tr><td>奥蒂塞伊</td><td>Residence Granvara</td><td>+39 335 816 3053</td></tr>
+      <tr><td>佛罗伦萨</td><td>Da Mario Guesthouse</td><td>+39 055 239 6349</td></tr>
+      <tr><td>罗马</td><td>Navona Stay</td><td>+39 06 8586 6351</td></tr>
+      <tr><td>布鲁塞尔</td><td>Bedford Hotel</td><td>+32 2 507 0000</td></tr>
     </table>
-    <div class="tip">⚠️ 高频拒签点：流水临时大额存入（现在起禁止）｜酒店订单缺一人姓名｜保险日期没盖住全程｜行程单与订单不一致。</div>
+    <h3 class="sec">已锁定预订总览</h3>
+    <table id="bookings"></table>
   </div>
 
   <!-- ============ 预算 ============ -->
   <div class="pane" id="money">
     <table>
       <tr><th>项目</th><th>最小档</th><th>最大档</th></tr>
-      <tr><td>住宿 12 晚</td><td>¥17,200</td><td>¥29,760</td></tr>
+      <tr><td>住宿（计划口径 12 晚）</td><td>¥17,200</td><td>¥29,760</td></tr>
       <tr><td>餐饮 13 天</td><td>¥13,520</td><td>¥17,680</td></tr>
       <tr><td>城际+市内交通</td><td>¥5,000</td><td>¥7,000</td></tr>
       <tr><td>门票+活动</td><td>¥4,400</td><td>¥6,000</td></tr>
       <tr><td>城市税</td><td>¥960</td><td>¥1,200</td></tr>
       <tr><td>签证+机票+保险杂项</td><td>¥11,200</td><td>¥17,000</td></tr>
-      <tr><td>合计（人均）</td><td>¥52,280<br>(¥26,140)</td><td>¥78,640<br>(¥39,320)</td></tr>
+      <tr><td><b>合计（人均）</b></td><td><b>¥52,280</b><br>(¥26,140)</td><td><b>¥78,640</b><br>(¥39,320)</td></tr>
     </table>
-    <div class="tip">💡 不含去程机票与购物。可调参数版见 意大利旅行预算表.xlsx。</div>
-    <h3 class="sec">预订时间线</h3>
-    <div class="item"><div><b>7 月底前</b>：订全程 13 晚可取消酒店（两人姓名都要在订单上！Ortisei 5 晚最先订）</div></div>
-    <div class="item"><div><b>8/6</b>：梵蒂冈 10/5 门票（罗马时间 0:00 放票）</div></div>
-    <div class="item"><div><b>8 月中</b>：圣母百花穹顶 10/1 场（实名，热门时段提前 2–4 周售罄）</div></div>
-    <div class="item"><div><b>9/5 前后</b>：斗兽场 10/5 门票（提前 30 天）；定奥尔恰谷一日团</div></div>
-    <div class="item"><div><b>9/20 前</b>：订 9/25 晚 Verona/Bolzano backup 房（可取消，罢工兜底）</div></div>
-    <div class="item"><div><b>放票即买</b>：Seceda 分时段票、Gardena Card、火车票（可退改）</div></div>
+    <div class="tip">💡 上表为 7 月规划口径（罗马直飞方案）。实际方案已改为布鲁塞尔中转+1 晚酒店，且机票/酒店/门票多已实付——实付金额请填入 意大利旅行预算表.xlsx 的「实际花费」列对照。</div>
   </div>
 
-  <footer>意大利旅行规划 v1.5 · 2026-07-18 · 有问题随时改 🍝</footer>
+  <footer>意大利旅行计划 v1.6 · 票据版 · 2026-09-19 · 一路顺风 🍝</footer>
 </div>
 
 <script>
-/* ---------- 行程数据（含详情） ---------- */
-const SEG = { "威尼斯":"var(--venice)", "Ortisei":"var(--dolo)", "佛罗伦萨":"var(--flor)", "罗马":"var(--rome)", "机上":"#999" };
+/* ---------- 行程数据（小时级，票据版） ---------- */
+const SEG = { "威尼斯":"var(--venice)", "多洛米蒂":"var(--dolo)", "佛罗伦萨":"var(--flor)", "罗马":"var(--rome)", "布鲁塞尔":"var(--bru)", "机上":"#999" };
 const DAYS = [
- {d:"9/23",w:"三",seg:"机上",plan:"北京 21:00 起飞",stay:"机上",detail:`
-   <h4>航班</h4><ul><li>21:00 北京起飞，中转维也纳 6 小时，行李直挂威尼斯</li>
-   <li>申根入境在维也纳完成（护照检查），威尼斯落地直接出机场</li></ul>`},
- {d:"9/24",w:"四",seg:"威尼斯",plan:"维也纳清晨快闪 → 13:00 落地威尼斯，大巴进岛；下午+夜晚主岛",stay:"Dorsoduro 区·近罗马广场/火车站",detail:`
-   <h4>维也纳快闪（清晨 ~3h）</h4><ul>
-   <li>清晨 ~6 点落地 → CAT 机场快线 16 分钟到市中心</li>
-   <li>圣斯蒂芬大教堂外观 → Café Central / Café Sperl 早餐（7–8 点才开门）→ 10 点前回机场</li></ul>
-   <h4>抵达威尼斯</h4><ul>
-   <li>13:00 落地 VCE → <b>ATVO/ACTV 机场大巴</b> 25 分钟 €10 → Piazzale Roma（Alilaguna 船 €15/75–100 分钟，体验向）</li>
-   <li>步行 10–15 分钟到酒店（Dorsoduro 方向）</li></ul>
-   <h4>下午+晚上（全程步行）</h4><ul>
-   <li>圣马可广场 → 里亚托桥 → Zattere 河岸日落</li>
-   <li>可选：水上巴士 1 号线沿大运河坐个来回（€9.5）</li></ul>`},
- {d:"9/25",w:"五",seg:"Ortisei",strike:1,plan:"⚠️罢工日：清晨威尼斯扫街 → 上午火车进山 → Bolzano → 350 路",stay:"主街 Piazza S Antonio 500m 圈",detail:`
-   <h4>逐段走法</h4><ul>
-   <li>清晨 6–8 点扫街摄影（酒店出门即是，8 点前回到车站方向）</li>
-   <li>步行 15 分钟 → S. Lucia 车站（<span class="warn">罢工兜底：ACTV 船可能停，全程步行</span>）</li>
-   <li><b>火车 9–10 点出发</b>：Venezia S. Lucia → Bolzano（直达 ~3h 或 Verona 换乘；€30–55；<b>优先 EC 国际车次</b>，罢工时历史上优先保住）</li>
-   <li>Bolzano 出站<b>右转 300 米</b>到集散点 <b>C 站台</b>（不是商场前那个）→ <b>350 路</b>（~1h/€7，Guest Pass 入住当天就能刷）→ Ortisei, Piazza S Antonio</li>
-   <li>步行 ≤10 分钟到酒店</li></ul>
-   <h4 class="warn">罢工 Plan B</h4><ul>
-   <li>火车大面积取消 → 启用 9/25 晚 Verona/Bolzano backup 房（9/20 前订可取消）</li>
-   <li>350 路停开 → Bolzano 打车进山 €90–120；NCC 接送 €400–500</li></ul>`},
- {d:"9/26",w:"六",seg:"Ortisei",strike:1,plan:"Seceda 刀锋山（罢工第 2 天原地活动）",stay:"Ortisei",detail:`
-   <h4>怎么走</h4><ul>
-   <li>步行 5–10 分钟到 Seceda 缆车站（镇中心东端）→ 两段缆车上山（~20 分钟）</li>
-   <li>山顶全程步行：刀锋山脊线、Baita Sofie 甜点+露营椅拍照位</li>
-   <li>原路缆车下山（同一缆车重复使用须间隔 1 小时以上）</li></ul>
-   <h4>预订</h4><ul>
-   <li><span class="warn">Seceda 分时段票：2/3 运力线上预售、绑日期不可退改，放票即买</span>（seceda.axess.shop）</li>
-   <li>今日启用 Gardena Card 三日卡（~€124/人，26/27/28 连用；二维码换实体票保管好）</li></ul>
-   <h4>晚餐</h4><ul><li>Mauritz Keller（O 镇，推荐 n.153 牛排，量大不踩雷，热门店提前订位）</li></ul>`},
- {d:"9/27",w:"日",seg:"Ortisei",plan:"休斯高原草甸轻徒步",stay:"Ortisei",detail:`
-   <h4>怎么走</h4><ul>
-   <li>步行 10–15 分钟到 Seiser Alm 缆车站（镇中心西端）→ 缆车上山</li>
-   <li>主缆车<b>无午休、末班 18:00</b>（"12:30–13:30 午休"是山上 Al Sole 小缆车）</li>
-   <li>草甸徒步（AllTrails/Komoot）：Monte Piz 线 7.7km/2.5h 或 Puflatsch 环线 8.8km/2.75h</li></ul>
-   <h4>提醒</h4><ul>
-   <li><span class="warn">周日山区店铺多关门</span>，水和干粮前一天采买</li>
-   <li>山上 ~10–15°C，洋葱式穿衣</li></ul>
-   <h4>晚餐</h4><ul><li>Ustaria Da Checco（€39，小红书实测推荐）或 Tubladel（€38）</li></ul>`},
- {d:"9/28",w:"一",seg:"Ortisei",plan:"🚴 男朋友骑行日；你自由活动",stay:"Ortisei",detail:`
-   <h4>男朋友 · 骑行</h4><ul>
-   <li>镇上租 e-bike（€60–80/天，步行取还）</li>
-   <li><span class="warn">零经验选谷地旧铁道铺装骑行道</span>（Ortisei↔Ponte Gardena 方向，平坦安全）或报 guided e-bike tour；<b>不要</b>上 gravel 下山道（e-MTB 车重助力猛，新手易摔）</li>
-   <li>确认旅行保险含骑行意外</li></ul>
-   <h4>你 · 自由活动（任选）</h4><ul>
-   <li>Resciesa 缆车（镇中心直达，小众安静）</li>
-   <li>二刷休斯高原 / 山景咖啡馆发呆</li>
-   <li>酒店 spa + 主街闲逛；350 路 1–2 站到 S. Cristina 看看</li></ul>`},
- {d:"9/29",w:"二",seg:"Ortisei",plan:"机动日：富内斯 > Sassolungo > Bolzano 雨天案 > 摆烂",stay:"Ortisei",detail:`
-   <h4>首选 · 富内斯山谷（晴天+状态好）</h4><ul>
-   <li>350 路 → Ponte Gardena（25min）→ 火车 1 站到 Chiusa（5min）→ <b>330 路</b> → S. Maddalena（20min）</li>
-   <li>圣玛达莱娜教堂明信片机位，傍晚光最好</li>
-   <li><span class="warn">日落 19:05 vs 330 路末班 ~19–20 点贴脸</span>：提前锁时刻表，或备 €40–60 出租车；Ranui 小教堂 €4 只收硬币</li></ul>
-   <h4>次选 · Sassolungo 长石山</h4><ul>
-   <li>350 路往山谷内 → Selva（20min）→ 缆车组合观景（参考 PDF 编号路线）</li></ul>
-   <h4>雨天 · Bolzano 半日</h4><ul>
-   <li>350 路下山：冰人 Ötzi 博物馆 + 拱廊街，全程公交覆盖</li></ul>
-   <h4>摆烂 · 镇内</h4><ul>
-   <li>spa、咖啡馆、补给采购（明天转场）</li></ul>
-   <h4 class="sub">不优先：三峰山（公交往返 7–8h 的 12 小时远征日）；Braies 湖仅晴天备选（往返 6h）</h4>`},
- {d:"9/30",w:"三",seg:"佛罗伦萨",plan:"早出山 → 下午 Oltrarno+老桥 → 米开朗基罗广场日落",stay:"SMN 车站步行 10–15 分钟·历史中心西侧",detail:`
-   <h4>出山（两案，9 月初新时刻表公布后拍板）</h4><ul>
-   <li><b>A 案</b>：6:00 头班 350 路 → Bolzano <b>7:12 直达高铁</b> → 10:24 到 Firenze SMN（早起但赚整个下午）</li>
-   <li><b>B 案</b>：8:00 出山 → ~10:30 火车 Verona/Bologna 换乘一次 → 12:30–13:30 到</li>
-   <li>SMN 站步行 10–15 分钟（或 T2 电车 1 站 €1.7/90min）到酒店寄存行李</li></ul>
-   <h4>下午+傍晚</h4><ul>
-   <li>Oltrarno 区 + 老桥闲逛</li>
-   <li>米开朗基罗广场日落：公交 12/13 路或步行 25–30 分钟爬坡；<span class="warn">比日落早 ≥1 小时到</span>，继续上行至圣米尼亚托大殿栏杆机位更出片</li>
-   <li>日落后步行下山：老桥夜景 → 领主广场（佣兵凉廊）→ 好运金猪 → 共和广场</li></ul>
-   <h4>吃</h4><ul><li>Gelateria della Passera / Vivoli 阿芙佳朵 / Trattoria Il Giardino（车站旁 T 骨）</li></ul>`},
- {d:"10/1",w:"四",seg:"佛罗伦萨",plan:"穹顶 8:15 场 → 大教堂博物馆 → 旧宫塔楼 → 领主广场",stay:"佛罗伦萨",detail:`
-   <h4>全日步行（全城任意两点 ≤25 分钟）</h4><ul>
-   <li><b>8:15 圣母百花穹顶登顶</b>：Brunelleschi Pass 实名制、验 ID、<span class="warn">仅 5 分钟容忍</span>；双肩包须寄存；400+ 级台阶近距离看《末日审判》</li>
-   <li>大教堂博物馆（多纳泰罗《抹大拉》、天堂之门真迹，强推）</li>
-   <li>旧宫塔楼登顶拍穹顶全景（提前 1–2 天线上订，雨天关闭不退）；雨天备选巴杰罗美术馆 €10</li>
-   <li>领主广场+共和广场夜游</li></ul>
-   <h4>吃</h4><ul>
-   <li>Ditta Artigianale（coffeemisu 液体提拉米苏）、Nino and Friends（开心果甜品）、Giotto Pizzeria（米其林合作款 bistecca）</li></ul>
-   <h4 class="sub">乌菲兹默认放弃（兴趣排序最低）；想去则 14:30 场插进今天（uffizi.it 提前订）</h4>`},
- {d:"10/2",w:"五",seg:"佛罗伦萨",plan:"奥尔恰谷一日小团：皮恩扎+柏树曲线+酒庄品酒",stay:"佛罗伦萨",detail:`
-   <h4>一日团</h4><ul>
-   <li>佛罗伦萨出发 8–12 人小团（€100–150/人，GetYourGuide/Viator 比价，8 月初选定）</li>
-   <li>集合点通常在 SMN 车站周边（步行可达）</li>
-   <li>经典串线：皮恩扎 + 丝柏曲线机位 + Montalcino 酒庄品酒</li>
-   <li>升级：NCC 包车 €350–450/车，想停哪停哪</li></ul>
-   <h4 class="sub">可替换：锡耶纳一日（SMN 大巴 131R，1h15m 直达，中世纪红色老城）</h4>`},
- {d:"10/3",w:"六",seg:"罗马",plan:"高铁南下 → Monti 扫街+斗兽场外观 → 圣天使桥日落",stay:"万神殿–纳沃纳–鲜花广场三角区",detail:`
-   <h4>转场</h4><ul>
-   <li>酒店 → 步行 → SMN → Frecciarossa/Italo → <b>Roma Termini</b>（1h32–1h40，可退改票）</li>
-   <li>Termini → 酒店：<b>公交 40/64 路</b>（~20 分钟 €1.5，contactless 拍卡）或打车 €12–15</li></ul>
-   <h4>下午+傍晚（步行）</h4><ul>
-   <li>Monti 区扫街 → 斗兽场外观机位：Largo Gaetana Agnesi（Colosseo 地铁站二楼平台）、Via Nicola Salvi</li>
-   <li><b>圣天使桥日落</b>+台伯河散步</li></ul>
-   <h4>吃</h4><ul><li>Pasqualino al Colosseo（Cannelloni）；Pam local 超市补给</li></ul>`},
- {d:"10/4",w:"日",seg:"罗马",plan:"圣彼得 7:00 早场+穹顶 → 博尔盖塞 15:00 → 苹丘日落",stay:"罗马",detail:`
-   <h4>上午（步行 25 分钟过圣天使桥，清晨舒服）</h4><ul>
-   <li><b>圣彼得大教堂 7:00 早场</b>（免费）：贝尼尼青铜华盖、米开朗琪罗《圣殇》</li>
-   <li>穹顶登顶 €15（俯瞰贝尼尼柱廊+罗马全景）；只认黄背心官方人员</li></ul>
-   <h4>下午</h4><ul>
-   <li>回酒店午休 → 公交/打车 15–20 分钟 → <b>博尔盖塞美术馆 15:00 场</b></li>
-   <li><span class="warn">2 小时一批卡点放人，提前 15 分钟换票，逾期作废；A4 以上的包必须寄存</span></li>
-   <li>10/4 是国立免费日：博尔盖塞免费但<b>必须预约</b>（放票即抢）；备选 10/3 17:00 付费场</li></ul>
-   <h4>傍晚</h4><ul>
-   <li>美术馆出来<b>步行 5 分钟到苹丘</b>看日落（18:40），沿人民广场走回城</li></ul>
-   <h4>吃</h4><ul><li>AI Forno della Soffitta（玛格丽特披萨）；La Focaccina di Serafina（小披萨）</li></ul>`},
- {d:"10/5",w:"一",seg:"罗马",plan:"梵蒂冈 8:30 → 斗兽场 14:30 → Trastevere",stay:"罗马",detail:`
-   <h4>上午 · 梵蒂冈</h4><ul>
-   <li>40/64 路到圣彼得广场侧 → 步行 10 分钟到博物馆入口（Viale Vaticano）</li>
-   <li><b>8:30 场</b>（8/6 罗马时间 0:00 放票；€25）：拉斐尔房间→地图长廊→西斯廷《创世纪》</li>
-   <li><span class="warn">严格按预约时间，提前也不让进；着装遮肩、下装过膝</span></li></ul>
-   <h4>下午 · 古罗马</h4><ul>
-   <li><b>地铁 A 线</b> Ottaviano → Termini 换 <b>B 线</b> → Colosseo（35 分钟）；或公交 87 路</li>
-   <li><b>斗兽场 14:30 场</b>（9/5 前后订，提前 30 天；€18）：提前半小时安检，迟到无法入场</li>
-   <li>帕拉蒂尼山+古罗马广场同票：广场 1 号口进 → 2 号口上帕拉蒂尼 → 6 号口出</li></ul>
-   <h4>晚上</h4><ul>
-   <li>公交/打车 15–20 分钟 → Trastevere 晚餐（Klass：牛排/章鱼腿）→ 饭后步行过桥回城看夜景</li></ul>`},
- {d:"10/6",w:"二",seg:"机上",plan:"清晨扫街 → 16:15 出发 FCO → CA940 20:30",stay:"机上",detail:`
-   <h4>清晨扫街（全程步行，出门即起点，约 4h）</h4><ul>
-   <li>西班牙广场 →（8min）特雷维喷泉 →（10min）万神殿（€5）→（5min）纳沃纳广场 →（15min）威尼斯广场</li>
-   <li>8 点前人少，扫街摄影黄金时段；Castroni（Via Ottaviano 55）买最便宜 Venchi 手信</li></ul>
-   <h4>离境</h4><ul>
-   <li>回酒店取行李（退房后寄存前台）</li>
-   <li><b>16:15 出发</b>：出租一口价 €55（<span class="warn">认罗马牌照白车；Fiumicino 牌照 €80 别上错</span>，45–60 分钟）</li>
-   <li>备选：公交到 Termini 换 Leonardo Express（€14/32 分钟）</li>
-   <li><b>CA940 20:30 → 10/7 12:45 落地北京</b>（20:30 在罢工保障时段内 ✓）</li></ul>`},
- {d:"10/7",w:"三",seg:"机上",plan:"12:45 落地北京 ✓",stay:"—",detail:""},
+ {d:"9/23",w:"三",seg:"机上",plan:"北京 → 西安｜启程（MU2122 21:00–23:15）",stay:"机上",rows:[
+   ["18:00–18:30","抵达大兴机场，确认联程行李△ 向柜台确认行李标签终点是否为 VIE"],
+   ["18:30–20:00","值机、托运、安检、晚餐 ◇ 随身保留维也纳转机用品"],
+   ["21:00–23:15","MU2122 北京大兴→西安 ● 已购"],
+   ["23:15–00:40","西安咸阳 T5 联程转机 ● 不出隔离区"]],
+  note:"下一段 01:30 起飞，转机仅 2 小时 15 分；下机后直接看转机标识。"},
+ {d:"9/24",w:"四",seg:"威尼斯",plan:"西安 → 维也纳 → 威尼斯（MU5063 + FR781）→ 傍晚里亚托+圣马可夜景",stay:"B&B Da Nina Venezia｜Santa Croce 573｜入住 14:00–19:30",rows:[
+   ["01:30–06:10","MU5063 西安→维也纳 ● 抵达 T3"],
+   ["06:10–08:00","入境、取行李、T3 转 T1 △ 若未直挂必须重新托运"],
+   ["08:00–11:20","早餐休息；T1 值机托运+安检 ◇ 瑞安行李截止以 App 为准"],
+   ["12:25–13:40","FR781 维也纳→威尼斯 ● Lauda 承运"],
+   ["13:40–15:10","入境取行李；机场巴士 → Piazzale Roma ◇ 约 20–25 分钟"],
+   ["15:10–16:00","步行 5–10 分钟到酒店入住"],
+   ["16:30–18:15","圣方济会荣耀圣母教堂外观、里亚托桥 ◇ 以散步为主"],
+   ["18:15–21:00","晚餐；圣马可广场与大运河夜景 ◇ 可乘水上巴士回"]],
+  note:"酒店入住窗口 14:00–19:30；航班延误应及时电话联系酒店。"},
+ {d:"9/25",w:"五",seg:"多洛米蒂",strike:1,plan:"⚠️罢工日｜威尼斯 → 维罗纳 → 博尔扎诺 → 奥蒂塞伊（火车 10:48–13:48 已购）",stay:"Residence Granvara｜Via Cuca 20, Ortisei｜16:00 起",rows:[
+   ["07:30–08:30","早餐、退房 ◇ 退房截止 10:30"],
+   ["08:30–09:30","Santa Lucia 周边晨间散步 ◇ 行李可暂存酒店"],
+   ["10:48–12:00","Frecciarossa 威尼斯→维罗纳 ● 4 车 7A/7B"],
+   ["12:20–13:48","Frecciarossa 维罗纳→博尔扎诺 ● 9 车 7A/8A（同站换乘 20 分钟）"],
+   ["14:28–15:25","350 公交 博尔扎诺→奥蒂塞伊 ● Piazza S. Antonio 下车"],
+   ["15:25–16:15","步行至公寓入住 ◇ 坡路带行李可改短途出租车"],
+   ["16:15–18:30","安顿采购；△ 领取 Gardena Card，确认 Seceda 预约"],
+   ["18:30–20:30","晚餐、早休息 ◇ 查次日天气与运营公告"]],
+  note:"⚠️ 罢工日：10:48 车次不在 6–9 保障窗口，提前查 Trenitalia 保障车次清单；350 若错过，立即查 südtirolmobil 下一班。"},
+ {d:"9/26",w:"六",seg:"多洛米蒂",plan:"多洛米蒂 ①｜Seceda 山脊（Gardena Card 第 1 日）",stay:"Residence Granvara",rows:[
+   ["08:00–08:25","步行至 Seceda 山谷站 △ 按预约时段提前抵达"],
+   ["08:30–09:10","Ortisei–Furnes–Seceda 缆车上山 △ 以预约时段为准"],
+   ["09:10–12:00","山脊观景、Pieralongia 方向轻徒步 ◇ 按天气体力折返"],
+   ["12:00–13:00","山屋午餐 ◇ 保留现金"],
+   ["13:00–15:15","第二段轻徒步、摄影 ◇ 保持可返回缆车线"],
+   ["16:00–16:45","缆车下山 ◇ 季末运营约至 17:30，勿压末班"],
+   ["17:00–20:30","回公寓休息、晚餐 ◇ 整理照片查次日天气"]],
+  note:"Seceda 季末官方参考运营 08:30–17:30；预约通常可提前 3 天办理（用 Gardena Card 序列号）。"},
+ {d:"9/27",w:"日",seg:"多洛米蒂",plan:"多洛米蒂 ②｜Alpe di Siusi 高原（Gardena Card 第 2 日）",stay:"Residence Granvara",rows:[
+   ["07:15–08:10","早餐、步行至山谷站 ◇ 尽量首批上山"],
+   ["08:30–09:00","Ortisei→Alpe di Siusi 缆车上山"],
+   ["09:00–12:00","高原全景步道 Mont Sëuc→Saltria ◇ 选缓坡，随时折返"],
+   ["12:00–13:00","山屋午餐"],
+   ["13:00–15:20","草甸轻徒步、观景 ◇ 不含的缆车需现场购票"],
+   ["16:00–16:30","缆车下山 ◇ 运营参考至 18:00，建议提前"],
+   ["17:00–20:30","休息、镇中心晚餐 ◇ 查看 Resciesa 次日运营"]],
+  note:"阴天可缩短高原徒步；雷雨大风以缆车停运公告为准。"},
+ {d:"9/28",w:"一",seg:"多洛米蒂",plan:"多洛米蒂 ③｜Resciesa＋Val d'Anna（Gardena Card 第 3 日）",stay:"Residence Granvara",rows:[
+   ["07:15–08:10","早餐、步行至 Resciesa 站"],
+   ["08:30–09:00","Resciesa 齿轨缆车上山"],
+   ["09:00–12:00","山顶轻徒步与全景观景 ◇ 官方轻松环线约 4.7km"],
+   ["12:00–13:00","山屋午餐"],
+   ["14:30–15:00","齿轨缆车下山 ◇ 季末参考运营至 17:00"],
+   ["15:15–16:30","Val d'Anna 林间轻步道 ◇ 约 1 小时往返"],
+   ["17:00–20:30","休息、晚餐 ◇ 通票 3 个连续日已完成"]],
+  note:"若前两日天气差，可把最佳天气留给 Seceda（26–28 三天可互换，但通票须连续使用）。"},
+ {d:"9/29",w:"二",seg:"多洛米蒂",plan:"多洛米蒂 ④｜Selva＋Vallunga（天气/体力缓冲日）",stay:"Residence Granvara",rows:[
+   ["09:27–09:48","350 公交 Ortisei→Selva Nives ● 官方时刻"],
+   ["10:00–12:30","Vallunga 山谷轻徒步 ◇ 原路往返，天气差则缩短"],
+   ["12:30–13:30","Selva 午餐"],
+   ["13:30–15:20","Selva 镇区散步（Nives 广场周边）"],
+   ["15:20–17:15","公交至 Santa Cristina；旧铁路步道散步 △ 班次前一晚 App 确认"],
+   ["17:15–18:00","公交返回 Ortisei"],
+   ["18:30–21:00","晚餐、整理行李 ◇ 次日 09:20 前离开公寓"]],
+  note:"缓冲日：如前 3 日因停运漏掉核心景点，可在此日自费补足。"},
+ {d:"9/30",w:"三",seg:"佛罗伦萨",plan:"奥蒂塞伊 → 博尔扎诺 → 佛罗伦萨（350 + Frecciarossa 13:12–16:24 已购）",stay:"Da Mario in Florence｜Via della Spada 13｜14:00–19:00",rows:[
+   ["07:15–08:15","早餐、打包 ◇ 退房截止 10:00"],
+   ["09:20–09:50","带行李前往 Piazza S. Antonio ◇ 坡路预留时间"],
+   ["10:01–10:57","350 公交 → 博尔扎诺 ● 官方时刻"],
+   ["11:00–12:50","Bolzano 站区午餐候车 ◇ 不离站太远"],
+   ["13:12–16:24","Frecciarossa → 佛罗伦萨 ● 6 车 18D/17D"],
+   ["16:24–17:00","步行 10–15 分钟到酒店入住"],
+   ["17:30–19:00","Santa Maria Novella、阿诺河、老桥 ◇ 短线适应"],
+   ["19:00–21:00","晚餐 ◇ 次日乌菲兹固定 14:15"]],
+  note:"酒店为拆分订单但连续住宿，入住时确认无需换房。"},
+ {d:"10/1",w:"四",seg:"佛罗伦萨",plan:"大教堂历史轴 ＋ 乌菲兹 14:15（已订）→ 米开朗琪罗广场日落",stay:"Da Mario in Florence",rows:[
+   ["09:00–09:40","新圣母大殿广场"],
+   ["10:15–11:15","圣母百花大教堂 ● 主教堂免费；周四开放参考 10:15 起"],
+   ["11:15–12:15","洗礼堂外观、领主广场 ◇ 穹顶/钟楼未购票不强行加入"],
+   ["12:15–13:20","午餐"],
+   ["13:20–13:45","步行至乌菲兹、存包安检 ● 提前 30 分钟"],
+   ["14:15–17:00","乌菲兹美术馆 ● 2 人；PNR K2V37K0V"],
+   ["17:00–18:00","老桥、奥尔特拉诺散步"],
+   ["18:00–19:10","米开朗琪罗广场日落 ◇ 日落约 18:51，可乘公交/出租上坡"],
+   ["19:30–21:00","晚餐 ◇ 避免夜间走偏僻坡路"]],
+  note:"若大教堂排队过长，10:45 前离开队伍，确保乌菲兹准时。"},
+ {d:"10/2",w:"五",seg:"佛罗伦萨",plan:"包车｜锡耶纳＋酒庄（08:30 酒店接，△ 待确认）",stay:"Da Mario in Florence",rows:[
+   ["08:15–08:30","酒店大堂等候司机 △ 车牌、司机电话待确认"],
+   ["08:30–10:00","包车前往锡耶纳"],
+   ["10:00–12:30","锡耶纳历史中心：田野广场→主教堂"],
+   ["12:30–13:30","锡耶纳午餐"],
+   ["13:30–14:30","包车前往酒庄 △ 名称/地址待确认"],
+   ["14:30–16:30","酒庄参观与品鉴 △ 司机不饮酒"],
+   ["16:30–18:00","返回佛罗伦萨 △ 高峰可能延后"],
+   ["19:00–20:30","共和国广场、斯特罗齐宫周边晚餐"],
+   ["20:30–21:30","老桥夜景 ◇ 次日 09:15 前退房"]],
+  note:"司机确认后替换 08:30、酒庄地址与返程时间即可。"},
+ {d:"10/3",w:"六",seg:"罗马",plan:"佛罗伦萨 → 罗马（FR8507 10:33–12:20）→ 博尔盖塞 16:00（已订）→ Pincio 日落",stay:"Navona Stay｜Corso del Rinascimento 69｜15:00 后",rows:[
+   ["08:15–09:15","退房、步行至 SMN ◇ 至少提前 60 分钟"],
+   ["10:33–12:20","Frecciarossa 8507 → 罗马 ● 10 车 4D/3D"],
+   ["12:20–13:10","Termini→酒店寄存行李 ◇ Bus 70 至 Senato 或出租车；入住 15:00 起"],
+   ["14:10–15:00","出租车前往博尔盖塞"],
+   ["15:00–15:45","取票、安检、存包 ● 提前 45–60 分钟"],
+   ["16:00–18:00","博尔盖塞美术馆 ● 2 人固定时段"],
+   ["18:00–18:35","穿过博尔盖塞公园至 Pincio（25–35 分钟）"],
+   ["18:35–19:00","Pincio 观景台日落 ◇ 日落约 18:48"],
+   ["19:00–21:15","经 Villa Medici 至西班牙阶梯、晚餐、回酒店"]],
+  note:"本日先寄存行李再去美术馆，不带行李箱；馆内大包须寄存。"},
+ {d:"10/4",w:"日",seg:"罗马",plan:"罗马古城轴｜斗兽场（首个周日免费日 07:15 排队）→ 广场 → 帕拉蒂尼 → 万神殿 → 纳沃纳",stay:"Navona Stay",rows:[
+   ["06:50–07:15","出租车/公交前往斗兽场 ◇ 尽量 07:15 前到"],
+   ["07:15–08:30","现场排队领免费票 △ 先到先得，以分配入场时间为准"],
+   ["08:30–10:00","斗兽场参观 ● 官方建议 75–90 分钟"],
+   ["10:10–11:40","古罗马广场 ◇ 单向流线"],
+   ["11:40–13:00","帕拉蒂尼山 ◇ 坡路多，补水"],
+   ["13:00–14:00","午餐（Monti / Via dei Fori Imperiali）"],
+   ["14:00–14:35","图拉真柱与图拉真广场外观"],
+   ["14:35–15:10","威尼斯广场"],
+   ["15:35–16:30","万神殿 △ 首个周日免费仍可能排队"],
+   ["16:30–18:00","纳沃纳广场、四河喷泉 ◇ 酒店就在附近"],
+   ["18:00–21:00","回酒店休整、晚餐"]],
+  note:"若斗兽场被分配到下午：先游广场与帕拉蒂尼，按票面时间返回斗兽场。"},
+ {d:"10/5",w:"一",seg:"罗马",plan:"梵蒂冈 09:00（已订）＋圣彼得大教堂＋圣天使堡 → 台伯河回酒店",stay:"Navona Stay",rows:[
+   ["07:45–08:20","出租车至 Viale Vaticano ◇ 入口不在圣彼得广场"],
+   ["08:20–08:50","排队、安检、换票 ● 提前 40 分钟"],
+   ["09:00–12:45","梵蒂冈博物馆、拉斐尔画室、西斯廷 ● Passageway 1"],
+   ["12:45–14:15","Prati 午餐 ◇ 避开广场正面高价餐厅"],
+   ["14:15–15:00","绕城墙至圣彼得广场、安检"],
+   ["15:00–16:40","圣彼得大教堂 ● 夏季开放参考至 18:00"],
+   ["16:40–18:10","圣彼得广场、圣天使桥与圣天使堡外观"],
+   ["18:10–20:30","沿台伯河步行回酒店、晚餐 ◇ 15–20 分钟"]],
+  note:"宗教场所遮肩及膝；圣彼得安检若排队超 60 分钟，最晚 16:15 仍需入队。"},
+ {d:"10/6",w:"二",seg:"布鲁塞尔",plan:"罗马 → 布鲁塞尔（SN3182 18:10–20:20）｜离开意大利",stay:"Bedford Hotel & Congress Centre｜Rue du Midi 135",rows:[
+   ["上午","罗马自由活动/补漏 ◇ 退房后行李寄存前台"],
+   ["15:00–16:00","前往 FCO ◇ 国际航班留足 2 小时以上"],
+   ["18:10–20:20","SN3182 罗马→布鲁塞尔 ● 已购；行李联运北京"],
+   ["20:50–21:30","抵达布鲁塞尔，前往酒店入住"],
+   ["晚上","大广场周边夜景（若精力允许）"]],
+  note:"行李联运北京，随身带好过夜用品。"},
+ {d:"10/7",w:"三",seg:"布鲁塞尔",plan:"布鲁塞尔 → 北京（HU492 13:20 → 次日 05:00）",stay:"机上",rows:[
+   ["上午","布鲁塞尔半日：大广场、撒尿小童、巧克力手信 ◇ 视退房时间"],
+   ["10:30–11:00","前往机场"],
+   ["13:20–+05:00","HU492 布鲁塞尔→北京首都 ● 已购，抵达 T2"]],
+  note:"航班次日 05:00 到，机上尽量休息。"},
+ {d:"10/8",w:"四",seg:"机上",plan:"05:00 抵达北京首都 T2｜行程结束 ✓",stay:"—",rows:[
+   ["05:00","抵达北京，入境回家"]],
+  note:"欢迎回家！回来记得把实付金额填进预算表「实际花费」列。"},
 ];
-
-document.getElementById("days").innerHTML = DAYS.map((d,i)=>{
+document.getElementById("days").innerHTML = DAYS.map(d=>{
   const strike = d.strike ? " strike" : "";
   const badge = d.seg==="机上" ? "" : `<span class="badge" style="background:${SEG[d.seg]}">${d.seg}</span>`;
-  const detail = d.detail ? `<div class="detail">${d.detail}</div>` : "";
-  return `<div class="day${strike}" data-i="${i}">
+  const rows = d.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("");
+  return `<div class="day${strike}">
     <div class="dt"><span class="d">${d.d}</span><span class="w">周${d.w}</span>${badge}<span class="chev">›</span></div>
     <div class="plan">${d.plan}</div>
     <div class="stay">${d.stay}</div>
-    ${detail}
+    <div class="detail">
+      <table><tr><th>时间</th><th>安排</th></tr>${rows}</table>
+      <div class="keynote"><b>📌 当日关键提醒</b>　${d.note}</div>
+    </div>
   </div>`;
 }).join("");
-document.querySelectorAll(".day").forEach(el=>{
-  el.addEventListener("click",()=>el.classList.toggle("open"));
-});
 
-/* ---------- 签证 checklist ---------- */
-const CHECKS = [
- ["刷 VFS 预约（两人各注册）","目标 8 月上中旬；早 8 点/晚 10 点后多刷，捡取消号"],
- ["查护照","有效期 ≥2027-01-07 + 2 页空白；不够就本周换发"],
- ["在职证明 ×2","写 9/23–10/8 准假、保留职位、签字+公章；附营业执照盖章"],
- ["银行流水（近 3 个月）","余额 ≥3–5 万/人；绝不大额突存；递交前 15 天内打印"],
- ["订全程 13 晚可取消酒店","两人姓名都要在订单上（高频翻车点）"],
- ["买申根医疗险 ×2","≥€3万、含遣返、9/23–10/8、英文保单（¥100–300/人）"],
- ["返程机票预订单","签证用预订单即可，不必出票（或买可退改）"],
- ["申根申请表 ×2","在线填写打印，手写汉字签名"],
- ["照片 ×2 人","3.5×4.0cm 白底近照各 2 张"],
- ["身份证/户口本复印","身份证正反面同页；户口本整本"],
- ["PIPL 同意书","2026 新规，现场签或随材料交"],
- ["英文行程单","精确到每日城市+酒店+交通（可由规划 v1.4 生成）"],
- ["加分项（可选）","完税证明（带二维码）/社保/结婚证/房产/旧申根记录"],
+/* ---------- 行前核对 ---------- */
+const A = [
+ ["北京值机确认行李是否直挂维也纳","票据提示可能无法直挂；按「入境—取行李—T3 转 T1—瑞安重新托运」预案执行"],
+ ["Gardena Card 预约 Seceda 上山时段","9/23 起可用卡序列号预约 9/26 时段；9/25 在奥蒂塞伊领取实体卡"],
+ ["确认 10/2 包车细节","08:30 酒店接、锡耶纳停留、酒庄名称、品鉴预约、18:00 返程"],
+ ["确认 10/4 斗兽场免费日规则","每月第一个周日免费，现场领票；当天 07:15 到售票点排队"],
+ ["查 Trenitalia 罢工保障车次清单","9/25 10:48 车次不在保障时段内；罢工前 1–2 天公布清单，被砍可免费退改"],
 ];
-const saved = JSON.parse(localStorage.getItem("visaChecks")||"{}");
-document.getElementById("checklist").innerHTML = CHECKS.map((c,i)=>`
-  <div class="item ${saved[i]?"done":""}">
-    <input type="checkbox" id="ck${i}" ${saved[i]?"checked":""}>
-    <div><label for="ck${i}"><b>${c[0]}</b></label><div class="note">${c[1]}</div></div>
-  </div>`).join("");
-CHECKS.forEach((_,i)=>{
-  document.getElementById("ck"+i).addEventListener("change",e=>{
-    saved[i]=e.target.checked; localStorage.setItem("visaChecks",JSON.stringify(saved));
-    e.target.closest(".item").classList.toggle("done",e.target.checked);
+const B = [
+ ["离线备份所有票据","PDF、护照页、保险、酒店电话存两部手机+离线副本"],
+ ["9/25 晚查看山区天气","9/26–28 Seceda/Alpe di Siusi/Resciesa 可互换，但 Gardena Card 首刷后须连续 3 天"],
+ ["罗马梵蒂冈轻装","安检排队常态；不带大包；博尔盖塞提前 45 分钟到"],
+ ["大交通余量","火车提前 40 分钟到站、飞机提前 90–120 分钟到机场；站台以当天屏幕为准"],
+];
+function renderChecks(id, list, store){
+  const saved = JSON.parse(localStorage.getItem(store)||"{}");
+  document.getElementById(id).innerHTML = list.map((c,i)=>`
+    <div class="item ${saved[i]?"done":""}">
+      <input type="checkbox" id="${store}${i}" ${saved[i]?"checked":""}>
+      <div><label for="${store}${i}"><b>${c[0]}</b></label><div class="note">${c[1]}</div></div>
+    </div>`).join("");
+  list.forEach((_,i)=>{
+    document.getElementById(store+i).addEventListener("change",e=>{
+      saved[i]=e.target.checked; localStorage.setItem(store,JSON.stringify(saved));
+      e.target.closest(".item").classList.toggle("done",e.target.checked);
+    });
   });
-});
+}
+renderChecks("checkA", A, "prepA");
+renderChecks("checkB", B, "prepB");
 
-/* ---------- 签证时间表 ---------- */
-const TL = [
- ["第 1 周 7/18–24","刷预约号；查护照；开在职证明；流水养号（绝不大额突存）"],
- ["第 2–3 周 7/25–8/7","订全程可取消酒店；买保险；填申请表；拍照；机票预订单"],
- ["第 4 周 8/8–15","本人递交+录指纹+缴费；选快递返签"],
- ["第 5–6 周 8/16–9/5","等出签（4–8 工作日）；补料 48–72h 内响应；出签后出正式机票"],
- ["9/6–23","保底缓冲（不作为计划一部分）"],
+/* ---------- 已锁定预订 ---------- */
+const BK = [
+ ["9/23","MU2122 北京大兴→西安","21:00–23:15","已购｜行李联运确认中"],
+ ["9/24","MU5063 西安→维也纳","01:30–06:10","已购｜抵达 T3"],
+ ["9/24","FR781 维也纳→威尼斯","12:25–13:40","已购｜T1，核对行李"],
+ ["9/24","B&B Da Nina Venezia","入住 14:00–19:30","Santa Croce 573"],
+ ["9/25","威尼斯→维罗纳→博尔扎诺","10:48–13:48","已购｜两段 Frecciarossa"],
+ ["9/25","350 公交→奥蒂塞伊","14:28–15:25","官方时刻"],
+ ["9/25–30","Residence Granvara","5 晚","Via Cuca 20, Ortisei"],
+ ["9/26–28","Gardena Card","连续 3 日","2 成人"],
+ ["9/30","350 公交→博尔扎诺","10:01–10:57","官方时刻"],
+ ["9/30","Frecciarossa→佛罗伦萨","13:12–16:24","已购｜6 车 18D/17D"],
+ ["9/30–10/3","Da Mario Guesthouse","3 晚","Via della Spada 13"],
+ ["10/1","乌菲兹美术馆","14:15","2 人｜PNR K2V37K0V"],
+ ["10/2","锡耶纳＋酒庄包车","全天","△ 司机/酒庄待确认"],
+ ["10/3","FR8507→罗马","10:33–12:20","已购｜10 车 4D/3D"],
+ ["10/3","博尔盖塞美术馆","16:00–18:00","2 人｜预约制"],
+ ["10/3–6","Navona Stay","3 晚","Corso del Rinascimento 69"],
+ ["10/5","梵蒂冈博物馆","09:00","2 人｜Passageway 1"],
+ ["10/6","SN3182 罗马→布鲁塞尔","18:10–20:20","已购｜行李联运北京"],
+ ["10/6–7","Bedford Hotel","1 晚","Rue du Midi 135"],
+ ["10/7–8","HU492 布鲁塞尔→北京","13:20–次日 05:00","已购｜抵达 T2"],
 ];
-document.getElementById("timeline").innerHTML = TL.map(t=>
-  `<div class="item"><div><b>${t[0]}</b><div class="note">${t[1]}</div></div></div>`).join("");
+document.getElementById("bookings").innerHTML =
+  "<tr><th>日期</th><th>项目</th><th>时间</th><th>状态/地址</th></tr>" +
+  BK.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join("");
 
 /* ---------- tabs ---------- */
 document.querySelectorAll(".tab").forEach(t=>{
